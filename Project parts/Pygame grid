@@ -8,7 +8,7 @@ Created on Mon Sep  9 16:29:23 2019
 import pygame
 
 '''Setup variables'''
-size = (620,620) #Window size
+size = (616,616) #Window size
 block_size = 40 #Block size
 
 #RGB for colors
@@ -43,11 +43,20 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
     
-    screen.fill(BLACK) #Window background color
+    screen.fill(WHITE) #Window background color
     
-    for column in range(0, 800, width+margin):
-        for row in range(0, 800, height+margin):
-            pygame.draw.rect(screen, WHITE, [column,row,width,height])
+    for column in range(0, 800, width):
+        for row in range(0, 800, height):
+            pygame.draw.rect(screen, BLACK, [column,row,width,height], 1)
+    
+    #Example of movements
+    #To select a given square, it needs to be colored, for example:
+    #The next line chooses the first square from upper left corner
+    pygame.draw.rect(screen, RED, [ 1, 1, width - 1, height - 1])
+    #The next line chooses the square( 25, 25)
+    pygame.draw.rect(screen, RED, [15*25 , 15*(25), width -1 , height - 1])
+    #The next line chooses the square(39,10)
+    pygame.draw.rect(screen, RED, [15*39 , 15*10 , width - 1, height - 1])
         
     pygame.display.flip() #Actualize a change in the window (important)
     
