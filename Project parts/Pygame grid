@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Sep  9 16:29:23 2019
+
+@author: gustavo
+"""
+import pygame
+
+'''Setup variables'''
+size = (620,620) #Window size
+block_size = 40 #Block size
+
+#RGB for colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+
+'''Initialize pygame'''
+pygame.init()
+
+'''Activate the window display'''
+screen = pygame.display.set_mode(size)
+pygame.display.set_caption("Dijkstra's algorithm")
+
+done = False #Control boolean variables
+
+'''Activate clock'''
+#Manages the speed of updates in the window
+clock = pygame.time.Clock()
+
+'''Grid setup'''
+width=15
+height=15
+margin=1
+
+'''Game loop'''
+#Al the Dijkstra graphical simulation goes inside this while loop
+while not done:
+    #This section allows the window to be closed
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
+    
+    screen.fill(BLACK) #Window background color
+    
+    for column in range(0, 800, width+margin):
+        for row in range(0, 800, height+margin):
+            pygame.draw.rect(screen, WHITE, [column,row,width,height])
+        
+    pygame.display.flip() #Actualize a change in the window (important)
+    
+    clock.tick(60) #60 fps only
+
+#Close the window
+pygame.quit()
