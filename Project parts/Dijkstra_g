@@ -62,14 +62,36 @@ yf = int(input("La coordenada y del punto final: "))
 pygame.draw.rect(screen, GREEN, [x*(xf - 1), y*(yf - 1), width - 1, height - 1])
 
 obs = int(input("Selecciona el numero de obstaculos: "))
+obstacles = []
 for i in range(obs) :
-    xo_i = int(input("La coordenada x del primer punto del obstaculo {}:".format(i+1)))
-    yo_i = int(input("La coordenada y del primer punto del obstaculo {}:".format(i+1)))
+        obstacles.append([])
     
-    yf_i = int(input("La coordenada x del ultimo punto del obstaculo {}:".format(i+1)))
-    xf_i = int(input("La coordenada y del ultimo punto del obstaculo {}:".format(i+1)))
+for i in range(obs) :
+    while True:
+        xo_i = int(input("La coordenada x del primer punto del obstaculo {}:".format(i+1)))
+        if (xo_i != xi and xo_i != xf) :
+            break
+    while True:
+        yo_i = int(input("La coordenada y del primer punto del obstaculo {}:".format(i+1)))
+        if(yo_i != yi and yo_i != yf) :
+            break
     
+    while True:
+        xf_i = int(input("La coordenada x del ultimo punto del obstaculo {}:".format(i+1)))
+        if(xf_i != xi and xf_i != xf) :
+            break
     
+    while True:
+        yf_i = int(input("La coordenada y del ultimo punto del obstaculo {}:".format(i+1)))
+        if(yf_i != yi and yf_i != yf):
+            break
+    
+    for i in range(xo_i, xf_i, 1) :
+        for j in range(yo_i, yf_i, 1) :
+            pygame.draw.rect(screen, BLACK, [x*(i - 1),y*(j - 1),width - 1,height - 1])
+ 
+        
+        
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
 while not done:
