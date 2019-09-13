@@ -67,16 +67,16 @@ while not done:
     # Make a rectangle with 2 points.
         # How to make a rectangle?
             # Español:
-            # 1. Conocer cuál es el menor.
-            # 2. Extender una línea sobre X y Y del punto menor (ej. X de a < X de b, o X de b < X de a)
-            # para alcanzar (X, Y) del punto mayor.
+            # 1. Conocer cuál es el menor (ej. X de a < X de b, o X de b < X de a).
+            # 2. Extender una línea sobre X y Y del punto menor para alcanzar (X, Y) del punto mayor.
                 # Ejemplo: dados a(1, 2) y b(3, 6), hacer:
                 # a es menor.
-                # del punto a en el eje X se extenderá una línea recta hacia X = 3
+                # del punto a en el eje X se extenderá una línea recta hacia X = 3 (del punto b)
                     # nuevo_punto = a_xe(3, 2)
-                # del punto a en el eje Y se extenderá una línea hacia Y = 6
+                # del punto a en el eje Y se extenderá una línea hacia Y = 6 (del punto b)
                     # nuevo_punto = a_ye(1, 6)
             # 3. Extender líneas desde los puntos a_xe (sobre el eje Y) y a_ye (sobre el eje X) al punto b.
+            # 4. Rellenar el espacio entre esos puntos.
 
     pygame.display.flip() #Actualize a change in the window (important)
     
