@@ -1,25 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Sep 13 13:42:45 2019
+Created on Mon Sep  9 16:29:23 2019
 
-@author: clemente
+@author: clemente + gustavo
 """
-
 import pygame
-import numpy as np
+import random
 
 '''Setup variables'''
 size = (800,710) #Window size
-
-'''Arrays to contain the squares'''
-squares = []
 
 #RGB for colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 
 '''Initialize pygame'''
 pygame.init()
@@ -39,30 +36,81 @@ width=8
 height=8
 margin=1
 
-screen.fill(WHITE) #Window background color
+x = width 
+y = height
 
-for column in range(0, 800, width):
-        for row in range(0, 710, height):
-            pygame.draw.rect(screen, BLACK, [column,row,width,height], 1)
-            squares.append(pygame.Rect(column,row,width,height))
+""" Create rectangle algorithm pt. 1"""
+# Select 2 points in the space randomly.
+a = [random.randint(1, 50), random.randint(1, 50)]
+b = [random.randint(1, 50), random.randint(1, 50)]
 
-initial_check = True    
+# Check the selected points are not equals, if not, select other 2 points.
+while a[0] == b[0] or a[1] == b[1]:
+    a = [random.randint(1, 50), random.randint(1, 50)]
+    b = [random.randint(1, 50), random.randint(1, 50)]
+
+print("A:", a, "B:", b)
+
+# Make a rectangle with 2 points.
+# How to make a rectangle?
+# Español:
+# 1. Conocer cuál es el menor (ej. X de a < X de b, o X de b < X de a).
+if a[0] > b[0]:
+    aux = a
+    a = b
+    b = aux
+
+print("Menor:", a)
+
+""" End create rectangle algorithm pt. 1"""
+
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
 while not done:
-    
     #This section allows the window to be closed
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
     
-    if event.type == pygame.MOUSEBUTTONDOWN:
-        initial_square = [s for s in squares if s.collidepoint(event.pos)]
-        pygame.draw.rect(screen, RED, initial_square[0])
+    screen.fill(WHITE) #Window background color
     
+    for column in range(0, 800, width):
+        for row in range(0, 710, height):
+            pygame.draw.rect(screen, BLACK, [column,row,width,height], 1)
+
+    """ Creating a nd b points """
+    #The next line chooses the a(X,Y)
+    pygame.draw.rect(screen, GREEN, [x*(a[0] - 1), y*(a[1] - 1) , width - 1, height - 1])
+
+    #The next line chooses the b(X,Y)
+    pygame.draw.rect(screen, BLUE, [x*(b[0] - 1), y*(b[1] - 1) , width - 1, height - 1])
+
+    """ Create rectangle algorithm pt. 2"""
+    # 2. Extender una línea sobre X y Y del punto menor para alcanzar (X, Y) del punto mayor.
+    # Ejemplo: dados a(1, 2) y b(3, 6), hacer:
+    # a es menor.
     
-    
-            
+    # el nuevo punto es a_xe(b[0], a[1])
+    a_xe = [b[0], a[1]]
+    # nuevo_punto = a_xe(3, 2)
+    #The next line chooses the a_xe(X,Y)
+    pygame.draw.rect(screen, RED, [x*(a_xe[0] - 1), y*(a_xe[1] - 1) , width - 1, height - 1])
+    # del punto a en el eje X se extenderá una línea recta hacia X = 3 (del punto b, X de a_xe)
+    for i in range(a[0], a_xe[0]):
+        pygame.draw.rect(screen, BLACK, [x*(i - 1), y*(a[0] - 1) , width - 1, height - 1])
+
+    # el nuevo punto es a_xe(a[0], b[1])
+    a_ye = [a[0], b[1]]
+    # nuevo_punto = a_ye(1, 6)
+    #The next line chooses the a_ye(X,Y)
+    pygame.draw.rect(screen, RED, [x*(a_ye[0] - 1), y*(a_ye[1] - 1) , width - 1, height - 1])
+    # del punto a en el eje Y se extenderá una línea hacia Y = 6 (del punto b, Y de a_ye)
+    for i in range(a[1], a_ye[1]):
+        pygame.draw.rect(screen, BLACK, [x*(a[1] - 1), y*(i - 1) , width - 1, height - 1])
+
+    # 3. Extender líneas desde los puntos a_xe (sobre el eje Y) y a_ye (sobre el eje X) al punto b.
+    # 4. Rellenar el espacio entre esos puntos.
+
     pygame.display.flip() #Actualize a change in the window (important)
     
     clock.tick(60) #60 fps only
