@@ -3,7 +3,7 @@
 """
 Created on Mon Sep  9 16:29:23 2019
 
-@author: gustavo
+@author: clemente + gustavo
 """
 import pygame
 
@@ -35,6 +35,9 @@ width=8
 height=8
 margin=1
 
+x = width 
+y = height
+
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
 while not done:
@@ -54,12 +57,12 @@ while not done:
     #The next line chooses the first square from upper left corner
     pygame.draw.rect(screen, RED, [ 1, 1, width - 1, height - 1])
     #The next line chooses the square( 25, 25)
-    pygame.draw.rect(screen, RED, [8*25 , 8*(25), width -1 , height - 1])
+    pygame.draw.rect(screen, RED, [x*(25 - 1) , y*(25 - 1), width -1 , height - 1])
     #The next line chooses the square(39,10)
-    pygame.draw.rect(screen, RED, [8*39 , 8*10 , width - 1, height - 1])
+    pygame.draw.rect(screen, RED, [x*(39 - 1), y*(10 - 1) , width - 1, height - 1])
 
     #The next line chooses the square(10,10) # en realidad se hace en (X+1, Y+1), hay que restarle -1 para que quede donde es
-    pygame.draw.rect(screen, RED, [8*10 , 8*10 , width - 1, height - 1])
+    pygame.draw.rect(screen, RED, [x*(10 - 1) , y*(10 - 1), width - 1, height - 1])
 
     """ Create rectangle algorithm """
     # Select 2 points in the space randomly.
