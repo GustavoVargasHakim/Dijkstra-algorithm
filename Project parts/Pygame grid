@@ -57,7 +57,27 @@ while not done:
     pygame.draw.rect(screen, RED, [8*25 , 8*(25), width -1 , height - 1])
     #The next line chooses the square(39,10)
     pygame.draw.rect(screen, RED, [8*39 , 8*10 , width - 1, height - 1])
-        
+
+    #The next line chooses the square(10,10) # en realidad se hace en (X+1, Y+1), hay que restarle -1 para que quede donde es
+    pygame.draw.rect(screen, RED, [8*10 , 8*10 , width - 1, height - 1])
+
+    """ Create rectangle algorithm """
+    # Select 2 points in the space randomly.
+    # Check the selected points are not equals, if not, select other 2 points.
+    # Make a rectangle with 2 points.
+        # How to make a rectangle?
+            # Español:
+            # 1. Conocer cuál es el menor.
+            # 2. Extender una línea sobre X y Y del punto menor (ej. X de a < X de b, o X de b < X de a)
+            # para alcanzar (X, Y) del punto mayor.
+                # Ejemplo: dados a(1, 2) y b(3, 6), hacer:
+                # a es menor.
+                # del punto a en el eje X se extenderá una línea recta hacia X = 3
+                    # nuevo_punto = a_xe(3, 2)
+                # del punto a en el eje Y se extenderá una línea hacia Y = 6
+                    # nuevo_punto = a_ye(1, 6)
+            # 3. Extender líneas desde los puntos a_xe (sobre el eje Y) y a_ye (sobre el eje X) al punto b.
+
     pygame.display.flip() #Actualize a change in the window (important)
     
     clock.tick(60) #60 fps only
