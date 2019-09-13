@@ -3,8 +3,8 @@
 """
 Created on Thu Sep 12 22:06:55 2019
 
-@author: gustavo
-"""
+@author: gustavo + clemente"""
+
 '''This program allows to select squares in the grid by clicking on them'''
 
 import pygame
@@ -47,6 +47,7 @@ for column in range(0, 800, width):
             pygame.draw.rect(screen, BLACK, [column,row,width,height], 1)
             squares.append(pygame.Rect(column,row,width,height))
 
+initial_check = True    
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
 while not done:
@@ -55,9 +56,11 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
+    
     if event.type == pygame.MOUSEBUTTONDOWN:
         initial_square = [s for s in squares if s.collidepoint(event.pos)]
         pygame.draw.rect(screen, RED, initial_square[0])
+    
     
     
             
