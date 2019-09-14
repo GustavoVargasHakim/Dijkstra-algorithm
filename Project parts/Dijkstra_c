@@ -1,20 +1,72 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Sep  9 16:29:23 2019
+Created on Fri Sep 13 13:43:28 2019
 
-@author: clemente + gustavo
+@author: gustavo
 """
+
 import pygame
+import numpy as np
 import random
+
+'''Function to choose if one square is a corner, a wall or another'''
+def tipo_cuadrado (x, y) :
+    x_w = 8
+    y_h = 8
+    if x == (1 * x_w) and y == (1 * y_h):
+        tipo = 'ESI' # Esquina Superior Izquierda
+
+    if x == (100 * x_w) and y == (1 * y_h):
+        tipo = 'ESD' # Esquina Superior Derecha
+
+    if x == (100 * x_w) and y == (89 * y_h):
+        tipo = 'EID' # Esquina Inferior Derecha
+
+    if x == (1 * x_w) and y == (89 * y_h):
+        tipo = 'EII' # Esquina Inferior Izquierda
+
+    if x == (1 * x_w) and y > (1 * y_h) and y < (89 * y_h):
+        tipo = 'MI' # Pared Izquierda xd
+
+    if x == (100 * x_w) and y > (1 * y_h) and y < (89 * y_h):
+        tipo = 'MD' # Pared Derecha
+
+    if x > (1 * x_w) and x < (100 * x_w) and y == (1 * y_h):
+        tipo = 'MS' # Pared Superior
+    
+    if x > (1 * x_w) and x < (100 * x_w) and y == (89 * y_h):
+        tipo = 'MI' # Pared Inferior
+
+    return tipo
+
+def is_obstacle(sqrt):
+    if sqrt == 1:
+        return True
+
+'''Ejemplos de prueba'''    
+rect1 = pygame.Rect(1, 1, 4, 4) #ESI
+rect2 = pygame.Rect(100, 1, 4, 4) #ESD
+rect3 = pygame.Rect(100, 89, 4, 4) #EID
+rect4 = pygame.Rect(1, 89, 4, 4) #EII
+rect5 = pygame.Rect(1, 60, 4, 4) #MI
+rect6 = pygame.Rect(100, 60, 4, 4) #MD
+rect7 = pygame.Rect(40, 89, 4, 4) #MI
+rect8 = pygame.Rect(50, 1, 4, 4) #MS
+rect9 = pygame.Rect(50, 45, 4, 4)  #Otro
+
+#Los rectangulos son una 4-tupla; rect1[0] y rect1[1] son las coordenadas 'x' y 'y' de rect1
 
 '''Setup variables'''
 size = (800,710) #Window size
 
+'''Arrays to contain the squares'''
+squares = []
+
 #RGB for colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
+GREEN = (46, 145, 22)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
@@ -36,81 +88,147 @@ width=8
 height=8
 margin=1
 
-x = width 
+x = width
 y = height
 
-""" Create rectangle algorithm pt. 1"""
-# Select 2 points in the space randomly.
-a = [random.randint(1, 50), random.randint(1, 50)]
-b = [random.randint(1, 50), random.randint(1, 50)]
+screen.fill(WHITE) #Window background color
 
-# Check the selected points are not equals, if not, select other 2 points.
-while a[0] == b[0] or a[1] == b[1]:
-    a = [random.randint(1, 50), random.randint(1, 50)]
-    b = [random.randint(1, 50), random.randint(1, 50)]
+for column in range(0, 800, width):
+        for row in range(0, 710, height):
+            pygame.draw.rect(screen, BLACK, [column,row,width,height], 1)
+            squares.append(pygame.Rect(column,row,width,height))
 
-print("A:", a, "B:", b)
+'''Generador aleatorio de obstaculos'''
+obs = int(input("Selecciona el numero de obstaculos: "))
+obstacles = []
+for i in range(obs) :
+    '''Crear un arreglo vacio por cada obstaculo, dentro del arreglo obstacles'''
+    obstacles.append([])
 
-# Make a rectangle with 2 points.
-# How to make a rectangle?
-# Español:
-# 1. Conocer cuál es el menor (ej. X de a < X de b, o X de b < X de a).
-if a[0] > b[0]:
-    aux = a
-    a = b
-    b = aux
+b_and_w_matrix = np.zeros((800, 710))
+c_obs1 = 0
 
-print("Menor:", a)
+counter = 0
+for i in range(obs) :
+    
+    '''Todos los casos a partir de i >= 1, revisar primero el caso counter == 0'''
+    if counter != 0 :
+        
+        obs_width = random.randint(1, 20) #Generar anchura aleatoria
+        obs_height = random.randint(1, 20) #Generar altura aleatoria
+        
+        x_c = [] #Nuevo arreglo de coordenadas x 
+        x_c.append(obstacles[i - 1][0]) #Guardar la coordenada xi del obstaculo pasado
+        x_c.append(obstacles[i - 1][2]) #Guardar la coordenada xf del obstaculo pasado
+        
+        choice = random.choice(x_c) #Elegir alguna de las coordenadas xi o xf al azar, de x_c
+        '''El motivo de hacer esto es dejar espacios entre obstaculos, si choice elige xi, 
+        el siguiente obstaculo estara mas arriba que el anterior, si choice elige xf, el 
+        siguiente obstaculo esta mas abajo que el anterior, se deja al azar'''
+        if choice == obstacles[i-1][0] :#Caso xi
+            limit1 = obstacles[i - 1][0] - 1
+            limit2 = obstacles[i - 1][1] - 1
+            '''El siguiente proceso se encarga de verificar que los numeros aleatorios no sean 
+            iguales en un mismo rango, por ejemplo, random.randint(2,2) <--- es un error
+            entre mas obstaculos, este error aumenta mas'''
+            if limit1 <= 2 :
+                limit1 = limit1 + random.randint(2, random.randint(1,20))
+            if limit2 <= 2 :
+                limit2 = limit2 + random.randint(2, random.randint(1,20))
+            
+            '''Se generan las nuevas coordenadas iniciales del nuevo obstaculo'''
+            xi = random.randint(2, limit1)
+            yi = random.randint(2, limit2)
 
-""" End create rectangle algorithm pt. 1"""
+        else: #Caso xf
+            limit3 = obstacles[i - 1][2] + 1
+            limit4 = obstacles[i - 1][3] + 1
+            '''El siguiente proceso se encarga de verificar que los numeros aleatorios no sean 
+            iguales en un mismo rango, por ejemplo, random.randint(2,2) <--- es un error
+            entre mas obstaculos, este error aumenta mas'''
+            if limit3 >= 99 :
+                limit3 = limit3 - random.randint(2, random.randint(1,20))
+            if limit4 >= 88 :
+                limit4 = limit4 - random.randint(2, random.randint(1,20))
+            
+            '''Se generan las nuevas coordenadas iniciales del nuevo obstaculo'''
+            xi = random.randint(limit3, 99)
+            yi = random.randint(limit4, 88)
+            
+        '''Generar coordenadas finales del nuevo obstaculo'''
+        xf = xi + obs_width
+        if xf > 100 :
+            xf = 99
+        
+        yf = yi + obs_height
+        if yf > 89 :
+            yf = 88
+        
+        '''Guardar las coordenadas del nuevo obstaculo en la lista i de obstacles'''
+        obstacles[i].append(xi)
+        obstacles[i].append(yi)
+        obstacles[i].append(xf)
+        obstacles[i].append(yf)
+    
+    '''Caso 1: siempre se cumple al principio, cuando i = 0'''
+    if counter == 0 :
+        obs_width = random.randint(1, 20) #Generar anchura aleatoria
+        obs_height = random.randint(1, 20) #Generar altura aleatoria
+    
+        xi = random.randint(2,99)#Generar coordenada x inicial (esquina inferior izquierda)
+        yi = random.randint(2,88) #Generar coordenada y inicial (esquina inferior izquierda)
+    
+    
+        xf = xi + obs_width #Genera coordenada x final (esquina superior derecha)
+        if xf > 100 : #Si la coordenada se pasa del limite
+            xf = 99
+        
+        yf = yi + obs_height #Genera coordenada x final (esquina superior derecha)
+        if yf > 89 : #Si la coordenada se pasa del limite
+            yf = 88
+        
+        counter = 1 #Cambio de caso, este if ya nunca ocurrira nuevamente
+        
+        '''Guardar las coordenadas de las esquinas inferior izquierda (xi,yi) y superior 
+        derecha (xf, yf) dentro del primer arreglo contenido en obstacles'''
+        obstacles[i].append(xi)
+        obstacles[i].append(yi)
+        obstacles[i].append(xf)
+        obstacles[i].append(yf)
+    
+    '''Dibujar obstaculo'''
+    for j in range(xi, xf, 1):
+        for k in range(yi, yf, 1):
+            if b_and_w_matrix[j][k] != 1:
+                c_obs1 += 1
+
+            b_and_w_matrix[j][k] = 1
+            pygame.draw.rect(screen, BLACK, [x*(j - 1),y*(k - 1),width - 1,height - 1])            
+
+'''Get initial square'''
+#xi = int(input("La coordenada x del punto inicial: "))
+#yi = int(input("La coordenada y del punto inicial: "))
+
+#pygame.draw.rect(screen, RED, [x*(xi - 1), y*(yi - 1), width - 1, height - 1] )
+
+'''Get final square'''
+#xf = int(input("La coordenada x del punto final: "))
+#yf = int(input("La coordenada y del punto final: "))
+#pygame.draw.rect(screen, GREEN, [x*(xf - 1), y*(yf - 1), width - 1, height - 1])
+
+print("obstacles:", obstacles)
+""" Create Matrix to make the graph """
+graph_matrix = np.array((800*710, 800*710))
 
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
 while not done:
+    
     #This section allows the window to be closed
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            done = True
+            done = True        
     
-    screen.fill(WHITE) #Window background color
-    
-    for column in range(0, 800, width):
-        for row in range(0, 710, height):
-            pygame.draw.rect(screen, BLACK, [column,row,width,height], 1)
-
-    """ Creating a nd b points """
-    #The next line chooses the a(X,Y)
-    pygame.draw.rect(screen, GREEN, [x*(a[0] - 1), y*(a[1] - 1) , width - 1, height - 1])
-
-    #The next line chooses the b(X,Y)
-    pygame.draw.rect(screen, BLUE, [x*(b[0] - 1), y*(b[1] - 1) , width - 1, height - 1])
-
-    """ Create rectangle algorithm pt. 2"""
-    # 2. Extender una línea sobre X y Y del punto menor para alcanzar (X, Y) del punto mayor.
-    # Ejemplo: dados a(1, 2) y b(3, 6), hacer:
-    # a es menor.
-    
-    # el nuevo punto es a_xe(b[0], a[1])
-    a_xe = [b[0], a[1]]
-    # nuevo_punto = a_xe(3, 2)
-    #The next line chooses the a_xe(X,Y)
-    pygame.draw.rect(screen, RED, [x*(a_xe[0] - 1), y*(a_xe[1] - 1) , width - 1, height - 1])
-    # del punto a en el eje X se extenderá una línea recta hacia X = 3 (del punto b, X de a_xe)
-    for i in range(a[0], a_xe[0]):
-        pygame.draw.rect(screen, BLACK, [x*(i - 1), y*(a[0] - 1) , width - 1, height - 1])
-
-    # el nuevo punto es a_xe(a[0], b[1])
-    a_ye = [a[0], b[1]]
-    # nuevo_punto = a_ye(1, 6)
-    #The next line chooses the a_ye(X,Y)
-    pygame.draw.rect(screen, RED, [x*(a_ye[0] - 1), y*(a_ye[1] - 1) , width - 1, height - 1])
-    # del punto a en el eje Y se extenderá una línea hacia Y = 6 (del punto b, Y de a_ye)
-    for i in range(a[1], a_ye[1]):
-        pygame.draw.rect(screen, BLACK, [x*(a[1] - 1), y*(i - 1) , width - 1, height - 1])
-
-    # 3. Extender líneas desde los puntos a_xe (sobre el eje Y) y a_ye (sobre el eje X) al punto b.
-    # 4. Rellenar el espacio entre esos puntos.
-
     pygame.display.flip() #Actualize a change in the window (important)
     
     clock.tick(60) #60 fps only
