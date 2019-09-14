@@ -11,38 +11,75 @@ import numpy as np
 import random
 
 '''Function to choose if one square is a corner, a wall or another'''
-def tipo_cuadrado (x, y) :
+def get_tipo_cuadrado (x, y) :
     x_w = 8
     y_h = 8
     if x == (1 * x_w) and y == (1 * y_h):
         tipo = 'ESI' # Esquina Superior Izquierda
 
-    if x == (100 * x_w) and y == (1 * y_h):
+    elif x == (100 * x_w) and y == (1 * y_h):
         tipo = 'ESD' # Esquina Superior Derecha
 
-    if x == (100 * x_w) and y == (89 * y_h):
+    elif x == (100 * x_w) and y == (89 * y_h):
         tipo = 'EID' # Esquina Inferior Derecha
 
-    if x == (1 * x_w) and y == (89 * y_h):
+    elif x == (1 * x_w) and y == (89 * y_h):
         tipo = 'EII' # Esquina Inferior Izquierda
 
-    if x == (1 * x_w) and y > (1 * y_h) and y < (89 * y_h):
+    elif x == (1 * x_w) and y > (1 * y_h) and y < (89 * y_h):
         tipo = 'MI' # Pared Izquierda xd
 
-    if x == (100 * x_w) and y > (1 * y_h) and y < (89 * y_h):
+    elif x == (100 * x_w) and y > (1 * y_h) and y < (89 * y_h):
         tipo = 'MD' # Pared Derecha
 
-    if x > (1 * x_w) and x < (100 * x_w) and y == (1 * y_h):
+    elif x > (1 * x_w) and x < (100 * x_w) and y == (1 * y_h):
         tipo = 'MS' # Pared Superior
     
-    if x > (1 * x_w) and x < (100 * x_w) and y == (89 * y_h):
+    elif x > (1 * x_w) and x < (100 * x_w) and y == (89 * y_h):
         tipo = 'MI' # Pared Inferior
+
+    else:
+        tipo = 'OT'
 
     return tipo
 
-def is_obstacle(sqrt):
-    if sqrt == 1:
+def is_obstacle(b_and_w_matrix, x, y):
+    p = b_and_w_matrix[int(x), int(y)]
+    if p == 1:
         return True
+
+    return False
+
+RAIZ_2 = 1.4142 # Valor constante de raíz cuadrada de 2
+def set_edges_and_weights(x, y, sqrt_type, graph_list, point, b_and_w_matrix):
+    # Si es de la E. Superior Izquierda
+    if sqrt_type == 'ESI':
+        graph_list[point][0].append((x, y))
+
+        if not is_obstacle(b_and_w_matrix, x, y+1):
+            graph_list[point][1].append([x, y+1, 1])
+
+        if not is_obstacle(b_and_w_matrix, x+1, y):
+            graph_list[point][1].append([x+1, y, 1])
+
+        if not is_obstacle(b_and_w_matrix, x+1, y+1):
+            graph_list[point][1].append([x+1, y+1, RAIZ_2])
+        
+        print(graph_list[point])
+
+    if sqrt_type == 'ESD':
+        graph_list[point][0].append((x, y))
+
+        if not is_obstacle(b_and_w_matrix, x-1, y):
+            graph_list[point][1].append([x-1, y, 1])
+
+        if not is_obstacle(b_and_w_matrix, x, y+1):
+            graph_list[point][1].append([x, y+1, 1])
+
+        if not is_obstacle(b_and_w_matrix, x-1, y+1):
+            graph_list[point][1].append([x-1, y+1, RAIZ_2])
+        
+        print(graph_list[point])
 
 '''Ejemplos de prueba'''    
 rect1 = pygame.Rect(1, 1, 4, 4) #ESI
@@ -213,9 +250,34 @@ for i in range(obs) :
 #yf = int(input("La coordenada y del punto final: "))
 #pygame.draw.rect(screen, GREEN, [x*(xf - 1), y*(yf - 1), width - 1, height - 1])
 
-print("obstacles:", obstacles)
-""" Create Matrix to make the graph """
-graph_matrix = np.array((800*710, 800*710))
+""" Create List to make the graph """
+graph_list = [] # 0 = no contabilizado, usar if para identificarlo
+
+# Creando una graph_list vacía
+# Una graph_list es una 2-tupla ((), ())
+    # graph_list[[], []]
+# la primera tupla es una 2-tupla, que pertenece al punto actual (X, Y)
+    # graph_list[[X, Y], []]
+# la segunda tupla es una n-tupla, que son los siguientes puntos a los que puedo ir a partir de (X, Y),
+    # graph_list[[X, Y], [[], [], ..., [N]]]
+# cada tupla en n-tupla, a su vez, es una 3-tupla (X, Y, Weight)
+    # graph_list[[X, Y], [[X1, Y1, W1], [X2, Y2, W2], ..., [XN, YN, WN]]]
+for i in range(800*710):
+    graph_list.append([[], []])
+
+#print(graph_list[0])
+
+# Llenando la graph_list
+point = 0
+for i in squares:
+    print(i)
+    if not is_obstacle(b_and_w_matrix, i[0]/x, i[1]/y):
+        sqrt_type = get_tipo_cuadrado(i[0], i[1])
+        ### ERROR: CHECAR POR QUÉ (8, 8) LO TOMA COMO "ESI" ###
+        set_edges_and_weights(i[0]/x, i[1]/y, sqrt_type, graph_list, point, b_and_w_matrix)
+        point += 1
+
+#print(graph_list)
 
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
