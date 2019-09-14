@@ -105,8 +105,8 @@ for i in range(obs) :
     '''Crear un arreglo vacio por cada obstaculo, dentro del arreglo obstacles'''
     obstacles.append([])
 
+# 0s and 1s squares colours matrix, BLACK = 1, WHITE = 0
 b_and_w_matrix = np.zeros((800, 710))
-c_obs1 = 0
 
 counter = 0
 for i in range(obs) :
@@ -199,11 +199,8 @@ for i in range(obs) :
     '''Dibujar obstaculo'''
     for j in range(xi, xf, 1):
         for k in range(yi, yf, 1):
-            if b_and_w_matrix[j][k] != 1:
-                c_obs1 += 1
-
-            b_and_w_matrix[j][k] = 1
-            pygame.draw.rect(screen, BLACK, [x*(j - 1),y*(k - 1),width - 1,height - 1])            
+            b_and_w_matrix[j][k] = 1 # BLACK
+            pygame.draw.rect(screen, BLACK, [x*(j - 1),y*(k - 1),width - 1,height - 1])
 
 '''Get initial square'''
 #xi = int(input("La coordenada x del punto inicial: "))
