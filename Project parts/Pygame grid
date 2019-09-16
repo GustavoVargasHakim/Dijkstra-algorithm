@@ -55,7 +55,7 @@ while not done:
     #Example of movements
     #To select a given square, it needs to be colored, for example:
     #The next line chooses the first square from upper left corner
-    pygame.draw.rect(screen, RED, [ 1, 1, width - 1, height - 1])
+    pygame.draw.rect(screen, BLACK, [ 0, 0, width - 1, height - 1])
     #The next line chooses the square( 25, 25)
     pygame.draw.rect(screen, RED, [x*(25 - 1) , y*(25 - 1), width -1 , height - 1])
     #The next line chooses the square(39,10)

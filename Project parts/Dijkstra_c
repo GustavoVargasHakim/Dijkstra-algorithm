@@ -50,6 +50,12 @@ def is_obstacle(b_and_w_matrix, x, y):
 
     return False
 
+def is_xory_zero(x, y):
+    if x == 0 or y == 0:
+        return True
+
+    return False
+
 RAIZ_2 = 1.4142 # Valor constante de raíz cuadrada de 2
 def set_edges_and_weights(x, y, sqrt_type, graph_list, point, b_and_w_matrix):
     # Si es de la E. Superior Izquierda
@@ -432,16 +438,19 @@ point_b = 0 # Variable para recuperar conteo de puntos negros
 for i in squares:
     # si i no es un obstáculo
     if not is_obstacle(b_and_w_matrix, i[0]/x, i[1]/y):
-        # recupera el tipo de cuadrito
-        sqrt_type = get_tipo_cuadrado(i[0], i[1])
-        # hace la lista, cuadrito por cuadrito
-        set_edges_and_weights(i[0]/x, i[1]/y, sqrt_type, graph_list, point_w, b_and_w_matrix)
-        point_w += 1
-    else:
-        point_b += 1
+        # si x o y es 0, se excluye de la lista, si no, se hace el cálculo de sus adyacentes
+        if not is_xory_zero(i[0], i[1]):
+            # recupera el tipo de cuadrito
+            sqrt_type = get_tipo_cuadrado(i[0], i[1])
+            # hace la lista, cuadrito por cuadrito
+            set_edges_and_weights(i[0]/x, i[1]/y, sqrt_type, graph_list, point_w, b_and_w_matrix)
+            point_w += 1
+        else:
+            point_b += 1
 
 print("Real:", (800/8)*(710/8), "Relative:", point_w + point_b)
 
+print("\n VISTA DE LISTA *")
 for i in graph_list:
     print(i)
 
