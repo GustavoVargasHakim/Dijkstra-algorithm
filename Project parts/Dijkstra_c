@@ -442,6 +442,9 @@ for i in squares:
 
 print("Real:", (800/8)*(710/8), "Relative:", point_w + point_b)
 
+for i in graph_list:
+    print(i)
+
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
 while not done:
@@ -449,7 +452,7 @@ while not done:
     #This section allows the window to be closed
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            done = True        
+            done = True
     
     pygame.display.flip() #Actualize a change in the window (important)
     
