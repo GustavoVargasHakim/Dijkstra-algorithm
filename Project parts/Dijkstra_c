@@ -44,7 +44,7 @@ def get_tipo_cuadrado (x, y) :
     return tipo
 
 def is_obstacle(b_and_w_matrix, x, y):
-    p = b_and_w_matrix[int(x), int(y)]
+    p = b_and_w_matrix[int(x) - 1, int(y) - 1]
     if p == 1:
         return True
 
@@ -306,7 +306,7 @@ for i in range(obs) :
     obstacles.append([])
 
 # 0s and 1s squares colours matrix, BLACK = 1, WHITE = 0, check line 202
-b_and_w_matrix = np.zeros((800, 710))
+b_and_w_matrix = np.zeros((100, 89))
 
 counter = 0
 for i in range(obs) :
