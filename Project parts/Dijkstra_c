@@ -12,30 +12,28 @@ import random
 
 '''Function to choose if one square is a corner, a wall or another'''
 def get_tipo_cuadrado (x, y) :
-    x_w = 8
-    y_h = 8
-    if x == (1 * x_w) and y == (1 * y_h):
+    if x == 1 and y == 1:
         tipo = 'ESI' # Esquina Superior Izquierda
 
-    elif x == (100 * x_w) and y == (1 * y_h):
+    elif x == 100 and y == 1:
         tipo = 'ESD' # Esquina Superior Derecha
 
-    elif x == (100 * x_w) and y == (89 * y_h):
+    elif x == 100 and y == 89:
         tipo = 'EID' # Esquina Inferior Derecha
 
-    elif x == (1 * x_w) and y == (89 * y_h):
+    elif x == 1 and y == 89:
         tipo = 'EII' # Esquina Inferior Izquierda
 
-    elif x == (1 * x_w) and y > (1 * y_h) and y < (89 * y_h):
+    elif x == 1 and y > 1 and y < 89:
         tipo = 'MI' # Pared Izquierda xd
 
-    elif x == (100 * x_w) and y > (1 * y_h) and y < (89 * y_h):
+    elif x == 100 and y > 1 and y < 89:
         tipo = 'MD' # Pared Derecha
 
-    elif x > (1 * x_w) and x < (100 * x_w) and y == (1 * y_h):
+    elif x > 1 and x < 100 and y == 1:
         tipo = 'MS' # Pared Superior
     
-    elif x > (1 * x_w) and x < (100 * x_w) and y == (89 * y_h):
+    elif x > 1 and x < 100 and y == 89:
         tipo = 'MI' # Pared Inferior
 
     else:
@@ -44,7 +42,7 @@ def get_tipo_cuadrado (x, y) :
     return tipo
 
 def is_obstacle(b_and_w_matrix, x, y):
-    p = b_and_w_matrix[int(x) - 1, int(y) - 1]
+    p = b_and_w_matrix[int(x) - 2, int(y) - 2]
     if p == 1:
         return True
 
@@ -434,27 +432,26 @@ for i in range(int(800/8) * int(710/8)):
 point_w = 0 # Variable para recuperar conteo de puntos blancos
 point_b = 0 # Variable para recuperar conteo de puntos negros
 
-# Para cada cuadrito i
-for i in squares:
-    # si i no es un obstáculo
-    if not is_obstacle(b_and_w_matrix, i[0]/x, i[1]/y):
-        # si x o y es 0, se excluye de la lista, si no, se hace el cálculo de sus adyacentes
-        if not is_xory_zero(i[0], i[1]):
-            # recupera el tipo de cuadrito
-            sqrt_type = get_tipo_cuadrado(i[0], i[1])
-            # hace la lista, cuadrito por cuadrito
-            set_edges_and_weights(i[0]/x, i[1]/y, sqrt_type, graph_list, point_w, b_and_w_matrix)
+# Para cada cuadrito (i, j)
+for i in range(0, 100):
+    for j in range(0, 89):
+        # Si no es BLACK = 1
+        if b_and_w_matrix[i][j] != 1:
+            # Toma el tipo de cuadrito
+            sqrt_type = get_tipo_cuadrado(i+1, j+1)
+            # Inicializa las vértices y pesos del cuadrito
+            set_edges_and_weights(i+1, j+1, sqrt_type, graph_list, point_w, b_and_w_matrix)
             point_w += 1
-    else:
-        print("Obstacle:", point_b)
-        point_b += 1
-
-print("Real:", (800/8)*(710/8), "Relative:", point_w + point_b, "Dif:", ((800/8)*(710/8)) - (point_w + point_b))
+        else:
+            point_b += 1
 
 print("\n VISTA DE LISTA *")
 # Solo contar listas llenas
 for i in range(point_w):
-    print(graph_list[i])
+    print(i, ":", graph_list[i])
+
+#print("PW:", point_w)
+print("Real:", (800/8)*(710/8), "Relative:", point_w + point_b, "Dif:", ((800/8)*(710/8)) - (point_w + point_b))
 
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
