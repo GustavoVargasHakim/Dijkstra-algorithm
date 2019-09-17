@@ -75,7 +75,7 @@ def set_edges_and_weights(x, y, sqrt_type, graph_list, point, b_and_w_matrix):
 
 
     # Esquina Superior Derecha (ESD)
-    elif sqrt_type == 'ESD'
+    elif sqrt_type == 'ESD':
         graph_list[point][0].append((x, y))
 
         # Izquierda
@@ -91,7 +91,7 @@ def set_edges_and_weights(x, y, sqrt_type, graph_list, point, b_and_w_matrix):
             graph_list[point][1].append([x-1, y+1, RAIZ_2])
 
     # Esquina Inferior Izquierda (EII)
-    elif sqrt_type == 'EII'
+    elif sqrt_type == 'EII':
         graph_list[point][0].append((x, y))
 
         # Arriba
@@ -107,7 +107,7 @@ def set_edges_and_weights(x, y, sqrt_type, graph_list, point, b_and_w_matrix):
             graph_list[point][1].append([x+1, y-1, RAIZ_2])
 
     # Esquina Inferior Derecha (EID)
-    elif sqrt_type == 'EID'
+    elif sqrt_type == 'EID':
         graph_list[point][0].append((x, y))
 
         # Arriba
