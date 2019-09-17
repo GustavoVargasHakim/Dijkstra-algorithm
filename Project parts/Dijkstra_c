@@ -25,7 +25,7 @@ def get_tipo_cuadrado (x, y) :
         tipo = 'EII' # Esquina Inferior Izquierda
 
     elif x == 1 and y > 1 and y < 89:
-        tipo = 'MI' # Pared Izquierda xd
+        tipo = 'MZ' # Pared Izquierda xd
 
     elif x == 100 and y > 1 and y < 89:
         tipo = 'MD' # Pared Derecha
@@ -37,7 +37,7 @@ def get_tipo_cuadrado (x, y) :
         tipo = 'MI' # Pared Inferior
 
     else:
-        tipo = 'OT'
+        tipo = 'OT' # Nodo Libre
 
     return tipo
 
@@ -56,190 +56,200 @@ def is_xory_zero(x, y):
 
 RAIZ_2 = 1.4142 # Valor constante de raíz cuadrada de 2
 def set_edges_and_weights(x, y, sqrt_type, graph_list, point, b_and_w_matrix):
-    # Si es de la E. Superior Izquierda
+    # Esquina Superior Izquierda (ESI)
     if sqrt_type == 'ESI':
         # Agrega cuadrito a graph_list
         graph_list[point][0].append((x, y))
 
-        # Agrega los puntos adyacentes
-        if not is_obstacle(b_and_w_matrix, x, y+1):
-            graph_list[point][1].append([x, y+1, 1])
-
-        if not is_obstacle(b_and_w_matrix, x+1, y):
+        # Derecha
+        if b_and_w_matrix[x+1-1, y-1] != 1:
             graph_list[point][1].append([x+1, y, 1])
 
-        if not is_obstacle(b_and_w_matrix, x+1, y+1):
+        # Abajo
+        if b_and_w_matrix[x-1, y+1-1] != 1:
+            graph_list[point][1].append([x, y+1, 1])
+
+        # Diagonal abajo derecha
+        if b_and_w_matrix[x+1-1, y+1-1] != 1:
             graph_list[point][1].append([x+1, y+1, RAIZ_2])
 
-    # Si es de la E. Superior Derecha    
-    elif sqrt_type == 'ESD':
+
+    # Esquina Superior Derecha (ESD)
+    elif sqrt_type == 'ESD'
         graph_list[point][0].append((x, y))
 
-        if not is_obstacle(b_and_w_matrix, x-1, y):
+        # Izquierda
+        if b_and_w_matrix[x-1-1, y-1] != 1:
             graph_list[point][1].append([x-1, y, 1])
 
-        if not is_obstacle(b_and_w_matrix, x, y+1):
+        # Abajo
+        if b_and_w_matrix[x-1, y+1-1] != 1:
             graph_list[point][1].append([x, y+1, 1])
 
-        if not is_obstacle(b_and_w_matrix, x-1, y+1):
+        # Diagonal abajo izquierda
+        if b_and_w_matrix[x-1-1, y+1-1] != 1:
             graph_list[point][1].append([x-1, y+1, RAIZ_2])
 
-    # Si es de la E. Inferior Derecha
-    elif sqrt_type == 'EID':
-        graph_list[point][0].append((x, y))
-
-        if not is_obstacle(b_and_w_matrix, x-1, y):
-            graph_list[point][1].append([x-1, y, 1])
-
-        if not is_obstacle(b_and_w_matrix, x, y-1):
-            graph_list[point][1].append([x, y-1, 1])
-
-        if not is_obstacle(b_and_w_matrix, x-1, y-1):
-            graph_list[point][1].append([x-1, y-1, RAIZ_2])
-
-    # Si es de la E. Inferior Izquierda
-    elif sqrt_type == 'EII':
-        graph_list[point][0].append((x, y))
-
-        if not is_obstacle(b_and_w_matrix, x+1, y):
-            graph_list[point][1].append([x+1, y, 1])
-
-        if not is_obstacle(b_and_w_matrix, x, y-1):
-            graph_list[point][1].append([x, y-1, 1])
-
-        if not is_obstacle(b_and_w_matrix, x+1, y-1):
-            graph_list[point][1].append([x+1, y-1, RAIZ_2])
-
-    # Si es de la pared Inferior
-    elif sqrt_type == 'MI':
+    # Esquina Inferior Izquierda (EII)
+    elif sqrt_type == 'EII'
         graph_list[point][0].append((x, y))
 
         # Arriba
-        if not is_obstacle(b_and_w_matrix, x, y-1):
+        if b_and_w_matrix[x-1, y-1-1] != 1:
             graph_list[point][1].append([x, y-1, 1])
 
         # Derecha
-        if not is_obstacle(b_and_w_matrix, x+1, y):
+        if b_and_w_matrix[x+1-1, y-1] != 1:
             graph_list[point][1].append([x+1, y, 1])
 
-        # Abajo
-        if not is_obstacle(b_and_w_matrix, x, y+1):
-            graph_list[point][1].append([x, y+1, 1])
-
-        # Diagonal arriba
-        if not is_obstacle(b_and_w_matrix, x+1, y-1):
+        # Diagonal arriba derecha
+        if b_and_w_matrix[x+1-1, y-1-1] != 1:
             graph_list[point][1].append([x+1, y-1, RAIZ_2])
 
-        # Diagonal abajo
-        if not is_obstacle(b_and_w_matrix, x+1, y+1):
-            graph_list[point][1].append([x+1, y+1, RAIZ_2])
-
-    # Si es de la pared Derecha
-    elif sqrt_type == 'MD':
+    # Esquina Inferior Derecha (EID)
+    elif sqrt_type == 'EID'
         graph_list[point][0].append((x, y))
 
         # Arriba
-        if not is_obstacle(b_and_w_matrix, x, y-1):
+        if b_and_w_matrix[x-1, y-1-1] != 1:
             graph_list[point][1].append([x, y-1, 1])
 
         # Izquierda
-        if not is_obstacle(b_and_w_matrix, x-1, y):
+        if b_and_w_matrix[x-1-1, y-1] != 1:
             graph_list[point][1].append([x-1, y, 1])
 
-        # Abajo
-        if not is_obstacle(b_and_w_matrix, x, y+1):
-            graph_list[point][1].append([x, y+1, 1])
-
-        # Diagonal arriba
-        if not is_obstacle(b_and_w_matrix, x-1, y-1):
+        # Diagonal arriba izquierda
+        if b_and_w_matrix[x-1-1, y-1-1] != 1:
             graph_list[point][1].append([x-1, y-1, RAIZ_2])
 
-        # Diagonal abajo
-        if not is_obstacle(b_and_w_matrix, x-1, y+1):
-            graph_list[point][1].append([x-1, y+1, RAIZ_2])
-
-    # Si es de la pared Superior
+    # Muro Superior (MS)
     elif sqrt_type == 'MS':
         graph_list[point][0].append((x, y))
 
         # Abajo
-        if not is_obstacle(b_and_w_matrix, x, y+1):
+        if b_and_w_matrix[x-1, y+1-1] != 1:
             graph_list[point][1].append([x, y+1, 1])
 
-        # Izquierda
-        if not is_obstacle(b_and_w_matrix, x-1, y):
-            graph_list[point][1].append([x-1, y, 1])
-
         # Derecha
-        if not is_obstacle(b_and_w_matrix, x+1, y):
+        if b_and_w_matrix[x+1-1, y-1] != 1:
             graph_list[point][1].append([x+1, y, 1])
 
-        # Diagonal izquierda
-        if not is_obstacle(b_and_w_matrix, x-1, y+1):
-            graph_list[point][1].append([x-1, y+1, RAIZ_2])
+        # Izquierda
+        if b_and_w_matrix[x-1-1, y-1] != 1:
+            graph_list[point][1].append([x-1, y, 1])
 
-        # Diagonal derecha
-        if not is_obstacle(b_and_w_matrix, x+1, y+1):
+        # Diagonal abajo derecha
+        if b_and_w_matrix[x+1-1, y+1-1] != 1:
             graph_list[point][1].append([x+1, y+1, RAIZ_2])
 
-    # Si es de la pared Inferior
+        # Diagonal abajo izquierda
+        if b_and_w_matrix[x-1-1, y+1-1] != 1:
+            graph_list[point][1].append([x-1, y+1, RAIZ_2])
+
+    # Muro Inferior (MI)
     elif sqrt_type == 'MI':
         graph_list[point][0].append((x, y))
 
         # Arriba
-        if not is_obstacle(b_and_w_matrix, x, y-1):
+        if b_and_w_matrix[x-1, y-1-1] != 1:
             graph_list[point][1].append([x, y-1, 1])
-
-        # Izquierda
-        if not is_obstacle(b_and_w_matrix, x-1, y):
-            graph_list[point][1].append([x-1, y, 1])
 
         # Derecha
-        if not is_obstacle(b_and_w_matrix, x+1, y):
+        if b_and_w_matrix[x+1-1, y-1] != 1:
             graph_list[point][1].append([x+1, y, 1])
-
-        # Diagonal izquierda
-        if not is_obstacle(b_and_w_matrix, x-1, y-1):
-            graph_list[point][1].append([x-1, y-1, RAIZ_2])
-
-        # Diagonal derecha
-        if not is_obstacle(b_and_w_matrix, x+1, y-1):
-            graph_list[point][1].append([x+1, y-1, RAIZ_2])
-
-    # Si pertenece al conjunto de los cuadritos libres
-    else:
-        graph_list[point][0].append((x, y))
-
-        # Arriba
-        if not is_obstacle(b_and_w_matrix, x, y-1):
-            graph_list[point][1].append([x, y-1, 1])
-
-        # Abajo
-        if not is_obstacle(b_and_w_matrix, x, y+1):
-            graph_list[point][1].append([x, y+1, 1])
 
         # Izquierda
-        if not is_obstacle(b_and_w_matrix, x-1, y):
+        if b_and_w_matrix[x-1-1, y-1] != 1:
             graph_list[point][1].append([x-1, y, 1])
 
-        # Dercha
-        if not is_obstacle(b_and_w_matrix, x+1, y):
-            graph_list[point][1].append([x+1, y, 1])
-
         # Diagonal arriba derecha
-        if not is_obstacle(b_and_w_matrix, x+1, y-1):
+        if b_and_w_matrix[x+1-1, y-1-1] != 1:
             graph_list[point][1].append([x+1, y-1, RAIZ_2])
 
         # Diagonal arriba izquierda
-        if not is_obstacle(b_and_w_matrix, x-1, y-1):
+        if b_and_w_matrix[x-1-1, y-1-1] != 1:
+            graph_list[point][1].append([x-1, y-1, RAIZ_2])
+
+    # Muro Derecho (MD)
+    elif sqrt_type == 'MD':
+        graph_list[point][0].append((x, y))
+
+        # Arriba
+        if b_and_w_matrix[x-1, y-1-1] != 1:
+            graph_list[point][1].append([x, y-1, 1])
+
+        # Izquierda
+        if b_and_w_matrix[x-1-1, y-1] != 1:
+            graph_list[point][1].append([x-1, y, 1])
+
+        # Abajo
+        if b_and_w_matrix[x-1, y+1-1] != 1:
+            graph_list[point][1].append([x, y+1, 1])
+
+        # Diagonal arriba izquierda
+        if b_and_w_matrix[x-1-1, y-1-1] != 1:
+            graph_list[point][1].append([x-1, y-1, RAIZ_2])
+
+        # Diagonal abajo izquierda
+        if b_and_w_matrix[x-1-1, y+1-1] != 1:
+            graph_list[point][1].append([x-1, y+1, RAIZ_2])
+
+    # Muro Derecho (MZ)
+    elif sqrt_type == 'MZ':
+        graph_list[point][0].append((x, y))
+
+        # Arriba
+        if b_and_w_matrix[x-1, y-1-1] != 1:
+            graph_list[point][1].append([x, y-1, 1])
+
+        # Derecha
+        if b_and_w_matrix[x+1-1, y-1] != 1:
+            graph_list[point][1].append([x+1, y, 1])
+
+        # Abajo
+        if b_and_w_matrix[x-1, y+1-1] != 1:
+            graph_list[point][1].append([x, y+1, 1])
+
+        # Diagonal arriba derecha
+        if b_and_w_matrix[x+1-1, y-1-1] != 1:
+            graph_list[point][1].append([x+1, y-1, RAIZ_2])
+
+        # Diagonal abajo derecha
+        if b_and_w_matrix[x+1-1, y+1-1] != 1:
+            graph_list[point][1].append([x+1, y+1, RAIZ_2])
+
+    # Nodo libre (OT)
+    else:
+        # Arriba
+        if b_and_w_matrix[x-1, y-1-1] != 1:
+            graph_list[point][1].append([x, y-1, 1])
+
+        # Derecha
+        if b_and_w_matrix[x+1-1, y-1] != 1:
+            graph_list[point][1].append([x+1, y, 1])
+
+        # Izquierda
+        if b_and_w_matrix[x-1-1, y-1] != 1:
+            graph_list[point][1].append([x-1, y, 1])
+
+        # Abajo
+        if b_and_w_matrix[x-1, y+1-1] != 1:
+            graph_list[point][1].append([x, y+1, 1])
+
+        # Diagonal arriba derecha
+        if b_and_w_matrix[x+1-1, y-1-1] != 1:
+            graph_list[point][1].append([x+1, y-1, RAIZ_2])
+
+        # Diagonal arriba izquierda
+        if b_and_w_matrix[x-1-1, y-1-1] != 1:
             graph_list[point][1].append([x-1, y-1, RAIZ_2])
 
         # Diagonal abajo derecha
-        if not is_obstacle(b_and_w_matrix, x+1, y+1):
+        if b_and_w_matrix[x+1-1, y+1-1] != 1:
             graph_list[point][1].append([x+1, y+1, RAIZ_2])
 
         # Diagonal abajo izquierda
-        if not is_obstacle(b_and_w_matrix, x-1, y+1):
+        if b_and_w_matrix[x-1-1, y+1-1] != 1:
             graph_list[point][1].append([x-1, y+1, RAIZ_2])
 
 '''Ejemplos de prueba'''    
