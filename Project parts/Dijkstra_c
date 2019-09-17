@@ -397,7 +397,7 @@ for i in range(obs) :
     '''Dibujar obstaculo'''
     for j in range(xi, xf, 1):
         for k in range(yi, yf, 1):
-            b_and_w_matrix[j][k] = 1 # BLACK
+            b_and_w_matrix[j-1][k-1] = 1 # BLACK
             pygame.draw.rect(screen, BLACK, [x*(j - 1),y*(k - 1),width - 1,height - 1])
 
 '''Get initial square'''
