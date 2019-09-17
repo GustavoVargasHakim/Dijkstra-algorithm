@@ -45,14 +45,14 @@ def is_obstacle(b_and_w_matrix, x, y):
     p = b_and_w_matrix[int(x) - 2, int(y) - 2]
     if p == 1:
         return True
-
-    return False
+    else:
+        return False
 
 def is_xory_zero(x, y):
     if x == 0 or y == 0:
         return True
-
-    return False
+    else:    
+        return False
 
 RAIZ_2 = 1.4142 # Valor constante de raíz cuadrada de 2
 def set_edges_and_weights(x, y, sqrt_type, graph_list, point, b_and_w_matrix):
