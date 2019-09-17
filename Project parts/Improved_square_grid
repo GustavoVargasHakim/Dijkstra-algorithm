@@ -61,8 +61,6 @@ while not done:
         initial_square = [s for s in squares if s.collidepoint(event.pos)]
         pygame.draw.rect(screen, RED, initial_square[0])
     
-    
-    
             
     pygame.display.flip() #Actualize a change in the window (important)
     
