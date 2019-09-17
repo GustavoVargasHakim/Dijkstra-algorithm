@@ -11,46 +11,48 @@ import numpy as np
 import random
 
 '''Function to choose if one square is a corner, a wall or another'''
-def tipo_cuadrado (x, y) :
-    if x == 1 and y == 1 :
-        tipo = 'ESI'
+def get_tipo_cuadrado (x, y) :
+    if x == 1 and y == 1:
+        tipo = 'ESI' # Esquina Superior Izquierda
+
+    elif x == 100 and y == 1:
+        tipo = 'ESD' # Esquina Superior Derecha
+
+    elif x == 100 and y == 89:
+        tipo = 'EID' # Esquina Inferior Derecha
+
+    elif x == 1 and y == 89:
+        tipo = 'EII' # Esquina Inferior Izquierda
+
+    elif x == 1 and y > 1 and y < 89:
+        tipo = 'MI' # Pared Izquierda xd
+
+    elif x == 100 and y > 1 and y < 89:
+        tipo = 'MD' # Pared Derecha
+
+    elif x > 1 and x < 100 and y == 1:
+        tipo = 'MS' # Pared Superior
     
-    if x == 100 and y == 1 :
-        tipo = 'ESD'
-    
-    if x == 100 and y == 89 :
-        tipo = 'EID'
-    
-    if x == 1 and y == 89 :
-        tipo = 'EII'
-    
-    if x == 1 and y > 1 and y < 89 :
-        tipo = 'MI'
-    
-    if x == 100 and y > 1 and y < 89 :
-        tipo = 'MD'
-    
-    if x > 1 and x < 100 and y == 1 :
-        tipo = 'MS'
-    if x > 1 and x < 100 and y == 89 :
-        tipo = 'MI'
-   
+    elif x > 1 and x < 100 and y == 89:
+        tipo = 'MI' # Pared Inferior
+
+    else:
+        tipo = 'OT'
+
     return tipo
 
-#Los rectangulos son una 4-tupla; rect1[0] y rect1[1] son las coordenadas 'x' y 'y' de rect1
-
 def is_obstacle(b_and_w_matrix, x, y):
-    p = b_and_w_matrix[int(x), int(y)]
+    p = b_and_w_matrix[int(x) -2 , int(y) - 2]
     if p == 1:
         return True
-
-    return False
+    else:
+        return False
 
 def is_xory_zero(x, y):
     if x == 0 or y == 0:
         return True
-
-    return False
+    else:    
+        return False
 
 RAIZ_2 = 1.4142 # Valor constante de raíz cuadrada de 2
 def set_edges_and_weights(x, y, sqrt_type, graph_list, point, b_and_w_matrix):
@@ -239,6 +241,20 @@ def set_edges_and_weights(x, y, sqrt_type, graph_list, point, b_and_w_matrix):
         # Diagonal abajo izquierda
         if not is_obstacle(b_and_w_matrix, x-1, y+1):
             graph_list[point][1].append([x-1, y+1, RAIZ_2])
+
+'''Ejemplos de prueba'''    
+rect1 = pygame.Rect(1, 1, 4, 4) #ESI
+rect2 = pygame.Rect(100, 1, 4, 4) #ESD
+rect3 = pygame.Rect(100, 89, 4, 4) #EID
+rect4 = pygame.Rect(1, 89, 4, 4) #EII
+rect5 = pygame.Rect(1, 60, 4, 4) #MI
+rect6 = pygame.Rect(100, 60, 4, 4) #MD
+rect7 = pygame.Rect(40, 89, 4, 4) #MI
+rect8 = pygame.Rect(50, 1, 4, 4) #MS
+rect9 = pygame.Rect(50, 45, 4, 4)  #Otro
+
+#Los rectangulos son una 4-tupla; rect1[0] y rect1[1] son las coordenadas 'x' y 'y' de rect1
+
 '''Setup variables'''
 size = (800,710) #Window size
 
@@ -283,14 +299,14 @@ for column in range(0, 800, width):
 '''Generador aleatorio de obstaculos'''
 obs = int(input("Selecciona el numero de obstaculos: "))
 obstacles = []
-obs_list = []
 for i in range(obs) :
     '''Crear un arreglo vacio por cada obstaculo, dentro del arreglo obstacles'''
     obstacles.append([])
-    obs_list.append([])
+
+# 0s and 1s squares colours matrix, BLACK = 1, WHITE = 0, check line 202
+b_and_w_matrix = np.zeros((100, 89))
 
 counter = 0
-
 for i in range(obs) :
     
     '''Todos los casos a partir de i >= 1, revisar primero el caso counter == 0'''
@@ -379,55 +395,72 @@ for i in range(obs) :
         obstacles[i].append(yf)
     
     '''Dibujar obstaculo'''
-    for j in range(xi, xf, 1) :
-        for k in range(yi, yf, 1) :
-            b_and_w_matrix[j][k] = 1 # BLACK
+    for j in range(xi, xf, 1):
+        for k in range(yi, yf, 1):
+            b_and_w_matrix[j-1][k-1] = 1 # BLACK
             pygame.draw.rect(screen, BLACK, [x*(j - 1),y*(k - 1),width - 1,height - 1])
-    
+
+'''Get initial square'''
+#xi = int(input("La coordenada x del punto inicial: "))
+#yi = int(input("La coordenada y del punto inicial: "))
+
+#pygame.draw.rect(screen, RED, [x*(xi - 1), y*(yi - 1), width - 1, height - 1] )
+
+'''Get final square'''
+#xf = int(input("La coordenada x del punto final: "))
+#yf = int(input("La coordenada y del punto final: "))
+#pygame.draw.rect(screen, GREEN, [x*(xf - 1), y*(yf - 1), width - 1, height - 1])
+
 """ Create List to make the graph """
 graph_list = [] # 0 = no contabilizado, usar if para identificarlo
+
+# Creando una graph_list vacía
+# Una graph_list es una 2-tupla ((), ())
+    # graph_list[[], []]
+# la primera tupla es una 2-tupla, que pertenece al punto actual (X, Y)
+    # graph_list[[X, Y], []]
+# la segunda tupla es una n-tupla, que son los siguientes puntos a los que puedo ir a partir de (X, Y),
+    # graph_list[[X, Y], [[], [], ..., [N]]]
+# cada tupla en n-tupla, a su vez, es una 3-tupla (X, Y, Weight)
+    # graph_list[[X, Y], [[X1, Y1, W1], [X2, Y2, W2], ..., [XN, YN, WN]]]
 for i in range(int(800/8) * int(710/8)):
     graph_list.append([[], []])
+
+#print(graph_list[0])
 
 ### Llenando la graph_list ###
 point_w = 0 # Variable para recuperar conteo de puntos blancos
 point_b = 0 # Variable para recuperar conteo de puntos negros
 
-# Para cada cuadrito i
-for i in squares:
-    # si i no es un obstáculo
-    if not is_obstacle(b_and_w_matrix, i[0]/x, i[1]/y):
-        # si x o y es 0, se excluye de la lista, si no, se hace el cálculo de sus adyacentes
-        if not is_xory_zero(i[0], i[1]):
-            # recupera el tipo de cuadrito
-            sqrt_type = get_tipo_cuadrado(i[0], i[1])
-            # hace la lista, cuadrito por cuadrito
-            set_edges_and_weights(i[0]/x, i[1]/y, sqrt_type, graph_list, point_w, b_and_w_matrix)
+# Para cada cuadrito (i, j)
+for i in range(0, 100):
+    for j in range(0, 89):
+        # Si no es BLACK = 1
+        if b_and_w_matrix[i][j] != 1:
+            # Toma el tipo de cuadrito
+            sqrt_type = get_tipo_cuadrado(i+1, j+1)
+            # Inicializa las vértices y pesos del cuadrito
+            set_edges_and_weights(i+1, j+1, sqrt_type, graph_list, point_w, b_and_w_matrix)
             point_w += 1
-    else:
-        print("Obstacle:", point_b)
-        point_b += 1
-
-print("Real:", (800/8)*(710/8), "Relative:", point_w + point_b, "Dif:", ((800/8)*(710/8)) - (point_w + point_b))
+        else:
+            point_b += 1
 
 print("\n VISTA DE LISTA *")
 # Solo contar listas llenas
 for i in range(point_w):
-    print(graph_list[i])
-        
+    print(i, ":", graph_list[i])
+
+#print("PW:", point_w)
+print("Real:", (800/8)*(710/8), "Relative:", point_w + point_b, "Dif:", ((800/8)*(710/8)) - (point_w + point_b))
+
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
-counter = 0
 while not done:
     
     #This section allows the window to be closed
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            done = True        
-            
-    if event.type == pygame.MOUSEBUTTONDOWN:
-        initial_square = [s for s in squares if s.collidepoint(event.pos)]
-        pygame.draw.rect(screen, RED, initial_square[0])
+            done = True
     
     pygame.display.flip() #Actualize a change in the window (important)
     
