@@ -41,13 +41,6 @@ def get_tipo_cuadrado (x, y) :
 
     return tipo
 
-def is_obstacle(b_and_w_matrix, x, y):
-    p = b_and_w_matrix[int(x) - 2, int(y) - 2]
-    if p == 1:
-        return True
-    else:
-        return False
-
 def is_xory_zero(x, y):
     if x == 0 or y == 0:
         return True
