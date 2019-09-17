@@ -221,6 +221,7 @@ def set_edges_and_weights(x, y, sqrt_type, graph_list, point, b_and_w_matrix):
     # Nodo libre (OT)
     else:
         # Arriba
+        graph_list[point][0].append((x, y))
         if b_and_w_matrix[x-1, y-1-1] != 1:
             graph_list[point][1].append([x, y-1, 1])
 
