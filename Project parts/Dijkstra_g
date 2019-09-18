@@ -472,8 +472,6 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             init_square = [s for s in squares if s.collidepoint(event.pos)]
-            print(init_square[0][0])
-            print(init_square[0][1])
             if b_and_w_matrix[int((init_square[0][0])/8)][int((init_square[0][1])/8)] == 1 :
                 pygame.draw.rect(screen, BLACK, initial_square[0])
                 init_square = []
@@ -493,8 +491,6 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             finish_square = [s for s in squares if s.collidepoint(event.pos)]
-            print(finish_square[0][0])
-            print(finish_square[0][1])
             if b_and_w_matrix[int((finish_square[0][0])/8)][int((finish_square[0][1])/8)] == 1 :
                 pygame.draw.rect(screen, BLACK, finish_square[0])
                 finish_square = []
