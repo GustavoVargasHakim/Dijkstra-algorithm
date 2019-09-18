@@ -483,10 +483,11 @@ while not done:
     pygame.display.flip()
     
     if counter >= 1 :
-        break
+        done = True
 
 '''Selecting the initial square'''
 counter = 0
+done = False
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -502,10 +503,24 @@ while not done:
     pygame.display.flip()
     
     if counter >= 1 :
+        done = True
+
+graph_list = np.asarray(graph_list)
+initial_point = [(initial_square[0], initial_square[1])]
+for i in range(len(graph_list)):
+    if graph_list[i][0] == initial_point :
+        i_index = i
         break
-        
+
+end_point = [(end_square[0], end_square[1])]
+for i in range(len(graph_list)):
+    if graph_list[i][0] == end_point :
+        e_index = i
+        break
+
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
+done = False
 while not done:
     
     #This section allows the window to be closed
