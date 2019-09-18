@@ -41,6 +41,13 @@ def get_tipo_cuadrado (x, y) :
 
     return tipo
 
+def is_obstacle(b_and_w_matrix, x, y):
+    p = b_and_w_matrix[int(x) - 2, int(y) - 2]
+    if p == 1:
+        return True
+    else:
+        return False
+
 def is_xory_zero(x, y):
     if x == 0 or y == 0:
         return True
@@ -457,6 +464,46 @@ for i in range(point_w):
 #print("PW:", point_w)
 print("Real:", (800/8)*(710/8), "Relative:", point_w + point_b, "Dif:", ((800/8)*(710/8)) - (point_w + point_b))
 
+pygame.display.flip()
+
+'''Selecting the initial square'''
+counter = 0
+while not done:
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            init_square = [s for s in squares if s.collidepoint(event.pos)]
+            if b_and_w_matrix[int((init_square[0][0])/8)][int((init_square[0][1])/8)] == 1 :
+                pygame.draw.rect(screen, BLACK, initial_square[0])
+                init_square = []
+            else :
+                initial_square = pygame.Rect((int(init_square[0][0])/8)+1, (int(init_square[0][1])/8)+1, height, width)
+                pygame.draw.rect(screen, RED, init_square[0])
+                counter = counter + 1
+        
+    pygame.display.flip()
+    
+    if counter >= 1 :
+        break
+
+'''Selecting the initial square'''
+counter = 0
+while not done:
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            finish_square = [s for s in squares if s.collidepoint(event.pos)]
+            if b_and_w_matrix[int((finish_square[0][0])/8)][int((finish_square[0][1])/8)] == 1 :
+                pygame.draw.rect(screen, BLACK, finish_square[0])
+                finish_square = []
+            else :
+                end_square = pygame.Rect((int(finish_square[0][0])/8)+1, (int(finish_square[0][1])/8)+1, height, width)
+                pygame.draw.rect(screen, GREEN, finish_square[0])
+                counter = counter + 1
+        
+    pygame.display.flip()
+    
+    if counter >= 1 :
+        break
+        
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
 while not done:
@@ -465,7 +512,7 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-    
+        
     pygame.display.flip() #Actualize a change in the window (important)
     
     clock.tick(60) #60 fps only
