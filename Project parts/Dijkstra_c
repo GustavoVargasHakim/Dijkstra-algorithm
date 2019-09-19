@@ -464,6 +464,15 @@ for i in range(point_w):
 #print("PW:", point_w)
 print("Real:", (800/8)*(710/8), "Relative:", point_w + point_b, "Dif:", ((800/8)*(710/8)) - (point_w + point_b))
 
+""" Dijkstra's Algorithm in Comments
+1. Contar con vector de "visitados" y de "distancias"
+2. Ubicar coordenadas de initial_square
+3. Agregar initial_square a visitados[]
+4. Asignar un valor de cero (0) a la distancia entre initial_square e initial_square
+5. Asignar un valor infinito (-1 xd) a todos los demás nodos (no visitados)
+6. Calcular distancias entre init y adyacentes
+"""
+
 pygame.display.flip()
 
 '''Selecting the initial square'''
