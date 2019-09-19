@@ -41,6 +41,9 @@ def get_tipo_cuadrado (x, y) :
 
     return tipo
 
+def dijkstra(graph_list, b_and_w_matrix, start, end):
+    
+
 def is_obstacle(b_and_w_matrix, x, y):
     p = b_and_w_matrix[int(x) - 2, int(y) - 2]
     if p == 1:
@@ -505,6 +508,7 @@ while not done:
     if counter >= 1 :
         done = True
 
+'''Finding start and end point nodes in graph_list (indeces)'''
 graph_list = np.asarray(graph_list)
 initial_point = [(initial_square[0], initial_square[1])]
 for i in range(len(graph_list)):
@@ -517,6 +521,8 @@ for i in range(len(graph_list)):
     if graph_list[i][0] == end_point :
         e_index = i
         break
+    
+dijkstra(graph_list, b_and_w_matrix, i_index, e_index)
 
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
