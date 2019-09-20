@@ -536,6 +536,13 @@ def search_min_dist(adyacentes):
 
     return min_dist
 
+def is_in_visited(ady, visited):
+    for v in visited:
+        if v[0] == ady[0] and v[1] == ady[1]:
+            return True
+
+    return False
+
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
 visited = []
@@ -563,8 +570,17 @@ while not done:
         # para nodos no visitados de init, buscar distancia menor
         not_visited = []
         for ady in graph_list[i_index][1]:
-            if not ady in visited:
+            if not is_in_visited(ady, visited):
                 not_visited.append(ady)
+
+        #print(not_visited)
+        min_dist = search_min_dist(not_visited)
+        print("min:",min_dist)
+
+        for ad_c in not_visited:
+            if ad_c[2] == min_dist:
+                pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height])
+                visited.append([ad_c[0],ad_c[1]])
     
     time.sleep(1)
 
