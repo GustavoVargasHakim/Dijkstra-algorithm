@@ -9,6 +9,7 @@ Created on Fri Sep 13 13:43:28 2019
 import pygame
 import numpy as np
 import random
+import time as time
 
 '''Function to choose if one square is a corner, a wall or another'''
 def get_tipo_cuadrado (x, y) :
@@ -456,22 +457,13 @@ for i in range(0, 100):
         else:
             point_b += 1
 
-print("\n VISTA DE LISTA *")
+"""print("\n VISTA DE LISTA *")
 # Solo contar listas llenas
 for i in range(point_w):
-    print(i, ":", graph_list[i])
+    print(i, ":", graph_list[i])"""
 
 #print("PW:", point_w)
 print("Real:", (800/8)*(710/8), "Relative:", point_w + point_b, "Dif:", ((800/8)*(710/8)) - (point_w + point_b))
-
-""" Dijkstra's Algorithm in Comments
-1. Contar con vector de "visitados" y de "distancias"
-2. Ubicar coordenadas de initial_square
-3. Agregar initial_square a visitados[]
-4. Asignar un valor de cero (0) a la distancia entre initial_square e initial_square
-5. Asignar un valor infinito (-1 xd) a todos los demás nodos (no visitados)
-6. Calcular distancias entre init y adyacentes
-"""
 
 pygame.display.flip()
 
@@ -512,10 +504,71 @@ while not done:
     
     if counter >= 1 :
         break
-        
+
+'''Finding start and end point nodes in graph_list (indeces)'''
+graph_list = np.asarray(graph_list)
+initial_point = [(initial_square[0], initial_square[1])]
+for i in range(len(graph_list)):
+    if graph_list[i][0] == initial_point :
+        i_index = i
+        break
+
+end_point = [(end_square[0], end_square[1])]
+for i in range(len(graph_list)):
+    if graph_list[i][0] == end_point :
+        e_index = i
+        break
+
+""" Dijkstra's Algorithm in Comments
+1. Contar con vector de "visitados" y de "distancias"
+2. Ubicar coordenadas de initial_square
+3. Agregar initial_square a visitados[]
+4. Asignar un valor de cero (0) a la distancia entre initial_square e initial_square
+5. Asignar un valor infinito (-1 xd) a todos los demás nodos (no visitados)
+6. Calcular distancias entre init y adyacentes
+"""
+
+def search_min_dist(adyacentes):
+    min_dist = adyacentes[0][2]
+    for ady in adyacentes:
+        if min_dist > ady[2]:
+            min_dist = ady[2]
+
+    return min_dist
+
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
+visited = []
+tiempo = 0
 while not done:
+    # print(initial_square[0], initial_square[1])
+    # print(graph_list[i_index][1]) # Recupera adyacentes de i_index point
+    # print(graph_list[i_index][1][0][2]) # Recupera distancia a punto [0] adyacente de i_index point
+    
+    # Cuando nos ubicamos en init para ir a sus adyacentes con distancia más corta
+    if tiempo == 0:
+        visited.append([initial_square[0], initial_square[1]])
+        # Buscar distancia más corta
+        min_dist = search_min_dist(graph_list[i_index][1])
+        print("min:",min_dist)
+
+        # Colorear nodos con distancia más corta
+        for ad_c in graph_list[i_index][1]:
+            if ad_c[2] == min_dist:
+                pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height])
+                visited.append([ad_c[0],ad_c[1]])
+
+    # Cuando nos ubicamos en init para ir a los nodos que no se han visitado (diagonales)
+    elif tiempo == 1:
+        # para nodos no visitados de init, buscar distancia menor
+        not_visited = []
+        for ady in graph_list[i_index][1]:
+            if not ady in visited:
+                not_visited.append(ady)
+    
+    time.sleep(1)
+
+    tiempo += 1
     
     #This section allows the window to be closed
     for event in pygame.event.get():
