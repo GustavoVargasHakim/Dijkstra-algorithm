@@ -474,7 +474,7 @@ while not done:
         if event.type == pygame.MOUSEBUTTONDOWN:
             init_square = [s for s in squares if s.collidepoint(event.pos)]
             if b_and_w_matrix[int((init_square[0][0])/8)][int((init_square[0][1])/8)] == 1 :
-                pygame.draw.rect(screen, BLACK, initial_square[0])
+                pygame.draw.rect(screen, BLACK, init_square[0])
                 init_square = []
             else :
                 initial_square = pygame.Rect((int(init_square[0][0])/8)+1, (int(init_square[0][1])/8)+1, height, width)
