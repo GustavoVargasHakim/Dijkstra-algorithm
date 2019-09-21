@@ -19,6 +19,12 @@ def distances_finder(point, vector) :
         
     return i
 
+def graph_list_finder(point, vector) :
+    for i in range(len(vector)) :
+        if point == vector[i][0] :
+            break
+    
+    return i
 '''Function to choose if one square is a corner, a wall or another'''
 def get_tipo_cuadrado (x, y) :
     if x == 1 and y == 1:
@@ -611,6 +617,7 @@ while not done:
         # se reinicia el arreglo de no visitados
         not_visited = []
         adys = []
+        indeces = []
 
         # Por cada nodo vistado
         for node in visited:
@@ -624,6 +631,8 @@ while not done:
                     for n in adys:
                         if not is_in_arr(n, visited):
                             not_visited.append(n)
+                            #point = [(n[0], n[1])]
+                            indeces.append(graph_list_finder(point, graph_list))
 
                     break
         
@@ -636,6 +645,10 @@ while not done:
                 if graph_list[e_index][0] != n_point:
                     pygame.draw.rect(screen, BLUE, [(notv[0]-1)*8,(notv[1]-1)*8,width,height], 3)
                     visited.append([notv[0],notv[1]])
+                    #point = (notv[0], notv[1])
+                    #ix = distances_finder(point, distances)
+                    #new_dist = distances[ix] + notv[2]
+                    #if new_dist < distances[ix] :
                 # Si no, termina la ejecución, es decir, se encontró el punto final
                 else:
                     termino = True
