@@ -536,9 +536,9 @@ def search_min_dist(adyacentes):
 
     return min_dist
 
-def is_in_visited(ady, visited):
-    for v in visited:
-        if v[0] == ady[0] and v[1] == ady[1]:
+def is_in_arr(node, arr):
+    for n in arr:
+        if n[0] == node[0] and n[1] == node[1]:
             return True
 
     return False
@@ -547,6 +547,7 @@ def is_in_visited(ady, visited):
 #Al the Dijkstra graphical simulation goes inside this while loop
 visited = []
 tiempo = 0
+termino = False
 while not done:
     # print(initial_square[0], initial_square[1])
     # print(graph_list[i_index][1]) # Recupera adyacentes de i_index point
@@ -570,7 +571,7 @@ while not done:
         # para nodos no visitados de init, buscar distancia menor
         not_visited = []
         for ady in graph_list[i_index][1]:
-            if not is_in_visited(ady, visited):
+            if not is_in_arr(ady, visited):
                 not_visited.append(ady)
 
         #print(not_visited)
@@ -581,10 +582,38 @@ while not done:
             if ad_c[2] == min_dist:
                 pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height])
                 visited.append([ad_c[0],ad_c[1]])
-    
-    time.sleep(1)
 
-    tiempo += 1
+    elif tiempo > 1:
+        #print(visited)
+        not_visited = []
+        # Si alguno de los visitados tiene nodos no visitados, visitar los no visitados con camino más corto
+        adys = []
+        for node in visited:
+            point = [(node[0], node[1])]
+            for i in range(len(graph_list)):
+                if graph_list[i][0] == point:
+                    adys = graph_list[i][1]
+                    
+                    for n in adys:
+                        if not is_in_arr(n, visited):
+                            not_visited.append(n)
+
+                    break
+                    
+        for notv in not_visited:
+            if not is_in_arr(notv, visited):
+                n_point = [(notv[0], notv[1])]
+                if graph_list[e_index][0] != n_point:
+                    pygame.draw.rect(screen, BLUE, [(notv[0]-1)*8,(notv[1]-1)*8,width,height])
+                    visited.append([notv[0],notv[1]])
+                else:
+                    termino = True
+
+    if not termino:
+        time.sleep(1)
+        tiempo += 1
+    else:
+        tiempo = -1
     
     #This section allows the window to be closed
     for event in pygame.event.get():
