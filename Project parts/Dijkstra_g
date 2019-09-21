@@ -12,6 +12,13 @@ import random
 import time as time
 import math as math
 
+def distances_finder(point, vector) :
+    for i in range(len(vector)) :
+        if vector[i][0] == point :
+            break
+        
+    return i
+
 '''Function to choose if one square is a corner, a wall or another'''
 def get_tipo_cuadrado (x, y) :
     if x == 1 and y == 1:
@@ -567,6 +574,11 @@ while not done:
             if ad_c[2] == min_dist:
                 pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height],3)
                 visited.append([ad_c[0],ad_c[1]])
+                point = (ad_c[0], ad_c[1])
+                ix = distances_finder(point, distances)
+                if ad_c[2] < distances[ix][1] :
+                    distances[ix] = ad_c[2]
+                
 
     # Cuando nos ubicamos en init para ir a los nodos que no se han visitado (diagonales)
     elif tiempo == 1:
