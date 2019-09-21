@@ -570,7 +570,8 @@ while not done:
             if not is_in_arr(ady, visited):
                 not_visited.append(ady)
 
-        min_dist = search_min_dist(not_visited)
+        if not_visited:
+            min_dist = search_min_dist(not_visited)
         print("min:",min_dist)
 
         for ad_c in not_visited:
