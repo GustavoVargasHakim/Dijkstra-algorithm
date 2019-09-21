@@ -583,25 +583,31 @@ while not done:
         not_visited = []
         adys = []
 
-        # Por cada
+        # Por cada nodo vistado
         for node in visited:
             point = [(node[0], node[1])]
             for i in range(len(graph_list)):
+                # Recupera sus nodos adyacentes
                 if graph_list[i][0] == point:
                     adys = graph_list[i][1]
                     
+                    # agrega esos nodos adyacentes a no visitados
                     for n in adys:
                         if not is_in_arr(n, visited):
                             not_visited.append(n)
 
                     break
-                    
+        
+        # Por cada nodo no visitado
         for notv in not_visited:
+            # Si no está en visitado
             if not is_in_arr(notv, visited):
                 n_point = [(notv[0], notv[1])]
+                # Si no es el punto final, colorea el punto
                 if graph_list[e_index][0] != n_point:
                     pygame.draw.rect(screen, BLUE, [(notv[0]-1)*8,(notv[1]-1)*8,width,height])
                     visited.append([notv[0],notv[1]])
+                # Si no, termina la ejecución, es decir, se encontró el punto final
                 else:
                     termino = True
 
