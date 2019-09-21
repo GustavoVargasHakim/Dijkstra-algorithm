@@ -9,24 +9,7 @@ Created on Fri Sep 13 13:43:28 2019
 import pygame
 import numpy as np
 import random
-import math
-
-'''Index finder'''
-def graph_list_finder(point) :
-    for i in range(len(graph_list)):
-        if graph_list[i][0] == point :
-            index = i
-            break
-    
-    return index
-
-def wait_list_finder(point, w) :
-    for i in range(len(w)):
-        if w[i] == point :
-            index = i
-            break
-    
-    return index
+import time as time
 
 '''Function to choose if one square is a corner, a wall or another'''
 def get_tipo_cuadrado (x, y) :
@@ -58,8 +41,6 @@ def get_tipo_cuadrado (x, y) :
         tipo = 'OT' # Nodo Libre
 
     return tipo
-    
-    print('Prueba')    
 
 def is_obstacle(b_and_w_matrix, x, y):
     p = b_and_w_matrix[int(x) - 2, int(y) - 2]
@@ -273,6 +254,16 @@ def set_edges_and_weights(x, y, sqrt_type, graph_list, point, b_and_w_matrix):
         if b_and_w_matrix[x-1-1, y+1-1] != 1:
             graph_list[point][1].append([x-1, y+1, RAIZ_2])
 
+'''Ejemplos de prueba'''    
+rect1 = pygame.Rect(1, 1, 4, 4) #ESI
+rect2 = pygame.Rect(100, 1, 4, 4) #ESD
+rect3 = pygame.Rect(100, 89, 4, 4) #EID
+rect4 = pygame.Rect(1, 89, 4, 4) #EII
+rect5 = pygame.Rect(1, 60, 4, 4) #MI
+rect6 = pygame.Rect(100, 60, 4, 4) #MD
+rect7 = pygame.Rect(40, 89, 4, 4) #MI
+rect8 = pygame.Rect(50, 1, 4, 4) #MS
+rect9 = pygame.Rect(50, 45, 4, 4)  #Otro
 
 #Los rectangulos son una 4-tupla; rect1[0] y rect1[1] son las coordenadas 'x' y 'y' de rect1
 
@@ -466,13 +457,13 @@ for i in range(0, 100):
         else:
             point_b += 1
 
-#print("\n VISTA DE LISTA *")
+"""print("\n VISTA DE LISTA *")
 # Solo contar listas llenas
-#for i in range(point_w):
-#    print(i, ":", graph_list[i])
+for i in range(point_w):
+    print(i, ":", graph_list[i])"""
 
 #print("PW:", point_w)
-#print("Real:", (800/8)*(710/8), "Relative:", point_w + point_b, "Dif:", ((800/8)*(710/8)) - (point_w + point_b))
+print("Real:", (800/8)*(710/8), "Relative:", point_w + point_b, "Dif:", ((800/8)*(710/8)) - (point_w + point_b))
 
 pygame.display.flip()
 
@@ -493,11 +484,10 @@ while not done:
     pygame.display.flip()
     
     if counter >= 1 :
-        done = True
+        break
 
 '''Selecting the initial square'''
 counter = 0
-done = False
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -513,7 +503,7 @@ while not done:
     pygame.display.flip()
     
     if counter >= 1 :
-        done = True
+        break
 
 '''Finding start and end point nodes in graph_list (indeces)'''
 graph_list = np.asarray(graph_list)
@@ -528,7 +518,7 @@ for i in range(len(graph_list)):
     if graph_list[i][0] == end_point :
         e_index = i
         break
-    
+
 """ Dijkstra's Algorithm in Comments
 1. Contar con vector de "visitados" y de "distancias"
 2. Ubicar coordenadas de initial_square
@@ -540,100 +530,96 @@ for i in range(len(graph_list)):
 
 def search_min_dist(adyacentes):
     min_dist = adyacentes[0][2]
-    index = 0
-    for i in range(len(adyacentes)):
-        if min_dist > adyacentes[i][2]:
-            min_dist = adyacentes[i][2]
-            index = i
+    for ady in adyacentes:
+        if min_dist > ady[2]:
+            min_dist = ady[2]
 
-    return min_dist, index
+    return min_dist
+
+def is_in_arr(node, arr):
+    for n in arr:
+        if n[0] == node[0] and n[1] == node[1]:
+            return True
+
+    return False
 
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
 visited = []
-distances = []
-wait_list = []
 tiempo = 0
-done = False
-current_square = graph_list[i_index][0]
-ix = i_index
-final_square = graph_list[e_index][0]
-
-for i in range(len(list(graph_list))) :
-    if list(graph_list[i][0]) != [] :
-        x_c = list(graph_list)[i][0][0][0]
-        y_c = list(graph_list)[i][0][0][1]
-        element = [[x_c,y_c], math.inf]
-        if not element in distances :
-            distances.append(element)
-
+termino = False
 while not done:
-    # print(initial_square[0], initial_square[1])
-    # print(graph_list[i_index][1]) # Recupera adyacentes de i_index point
-    # print(graph_list[i_index][1][0][2]) # Recupera distancia a punto [0] adyacente de i_index point
-    
     # Cuando nos ubicamos en init para ir a sus adyacentes con distancia más corta
-    #if tiempo == 0:
-    #    visited.append([initial_square[0], initial_square[1]])
+    if tiempo == 0:
+        visited.append([initial_square[0], initial_square[1]])
         # Buscar distancia más corta
-        #min_dist = search_min_dist(graph_list[i_index][1])
-        #print("min:",min_dist)
+        min_dist = search_min_dist(graph_list[i_index][1])
+        print("min:",min_dist)
 
         # Colorear nodos con distancia más corta
-        #for ad_c in graph_list[i_index][1]:
-        #    if ad_c[2] == min_dist:
-        #        pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height])
-        #        visited.append([ad_c[0],ad_c[1]])
-        
-        #current_index = i_index
-        
+        for ad_c in graph_list[i_index][1]:
+            if ad_c[2] == min_dist:
+                pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height])
+                visited.append([ad_c[0],ad_c[1]])
+
     # Cuando nos ubicamos en init para ir a los nodos que no se han visitado (diagonales)
-    #elif tiempo == 1:
+    elif tiempo == 1:
         # para nodos no visitados de init, buscar distancia menor
-    #    not_visited = []
-    #    for ady in graph_list[current_index][1]:
-    #        if not ady in visited:
-    #            not_visited.append(ady)
-    
-    #time.sleep(1)
+        not_visited = []
+        for ady in graph_list[i_index][1]:
+            if not is_in_arr(ady, visited):
+                not_visited.append(ady)
 
-    #tiempo += 1
-    
-    if not final_square in visited :
+        if not_visited:
+            min_dist = search_min_dist(not_visited)
+        print("min:",min_dist)
 
-        for square in graph_list[ix][1] :
-            
-            distances.append(square)
-        visited.append(current_square)
-        dist, ix = search_min_dist(graph_list[ix][1])  
+        for ad_c in not_visited:
+            if ad_c[2] == min_dist:
+                pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height])
+                visited.append([ad_c[0],ad_c[1]])
+
+    # Cuando nos ubicamos en los nodos ya visitados* desde init
+    # buscar y colorear los nodos no visitados desde ellos*
+    elif tiempo > 1:
+        # se reinicia el arreglo de no visitados
+        not_visited = []
+        adys = []
+
+        # Por cada nodo vistado
+        for node in visited:
+            point = [(node[0], node[1])]
+            for i in range(len(graph_list)):
+                # Recupera sus nodos adyacentes
+                if graph_list[i][0] == point:
+                    adys = graph_list[i][1]
                     
-                
-            
-    '''if not final_square in visited :
-        if current_square == graph_list[i_index][0] :
-            for square in graph_list[i_index][1]:
-                pygame.draw.rect(screen, BLUE, [(square[0] - 1)*8, (square[1] - 1)*8, width, height])
-                distances.append(square)
-                wait_list.append(square)
-            
-            dist, ix = search_min_dist(wait_list)
-            current_square = wait_list[ix]
-            wait_list.remove(current_square)
+                    # agrega esos nodos adyacentes a no visitados
+                    for n in adys:
+                        if not is_in_arr(n, visited):
+                            not_visited.append(n)
+
+                    break
         
-        else:
-            if len(wait_list) != 0:
-                visited.append(current_square)
-                coordinates = [(current_square[0], current_square[1])]
-                c_index = graph_list_finder(coordinates)
-                for square in graph_list[c_index][1] :
-                    if square in wait_list :
-                        point = [square[0], square[1]]
-                        iy = wait_list_finder(point)
-                        dist = square[2] +  '''
-        
+        # Por cada nodo no visitado
+        for notv in not_visited:
+            # Si no está en visitado
+            if not is_in_arr(notv, visited):
+                n_point = [(notv[0], notv[1])]
+                # Si no es el punto final, colorea el punto
+                if graph_list[e_index][0] != n_point:
+                    pygame.draw.rect(screen, BLUE, [(notv[0]-1)*8,(notv[1]-1)*8,width,height])
+                    visited.append([notv[0],notv[1]])
+                # Si no, termina la ejecución, es decir, se encontró el punto final
+                else:
+                    termino = True
+
+    if not termino:
+        time.sleep(0.1)
+        tiempo += 1
+    else:
+        tiempo = -1
     
-    
-        
     #This section allows the window to be closed
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
