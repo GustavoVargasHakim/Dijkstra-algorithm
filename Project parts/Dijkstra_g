@@ -25,6 +25,18 @@ def graph_list_finder(point, vector) :
             break
     
     return i
+
+def local_dist_finder(opoint, cpoint, vector):
+    for i in range(len(vector)) :
+        if opoint == vector[i][0] :
+            break
+    for j in range(len(vector[i][1])) :
+        if vector[i][1][j][0] == cpoint[0][0] and vector[i][1][j][1] == cpoint[0][1] :
+            local = vector[i][1][j][2]
+            break
+        
+    return local
+
 '''Function to choose if one square is a corner, a wall or another'''
 def get_tipo_cuadrado (x, y) :
     if x == 1 and y == 1:
@@ -554,7 +566,7 @@ def is_in_arr(node, arr):
     for n in arr:
         if n[0] == node[0] and n[1] == node[1]:
             return True
-
+        
     return False
 
 '''Game loop'''
@@ -632,7 +644,8 @@ while not done:
                         if not is_in_arr(n, visited):
                             not_visited.append(n)
                             point = (node[0], node[1])
-                            indeces.append(distances_finder(point, distances))
+                            '''Los indices de distances que devuelven el nodo origen correspondiente a cada nodo en not_visited'''
+                            indeces.append(distances_finder(point, distances)) 
 
                     break
         
@@ -645,10 +658,20 @@ while not done:
                 if graph_list[e_index][0] != n_point:
                     pygame.draw.rect(screen, BLUE, [(notv[0]-1)*8,(notv[1]-1)*8,width,height], 3)
                     visited.append([notv[0],notv[1]])
-                    #point = (notv[0], notv[1])
-                    #ix = distances_finder(point, distances)
-                    #new_dist = distances[ix] + notv[2]
-                    #if new_dist < distances[ix] :
+                    point = (notv[0], notv[1])
+                    ix = distances_finder(point, distances) #Indice en distances del nodo actual
+                    iy = not_visited.index(notv) #Indice en not_visited del nodo actual
+                    origin_index = indeces[iy] #Indice en distances en el nodo origen
+                    prev_dist = distances[origin_index][1] #Distancia hasta el nodo origen
+                    origin_square = [(distances[origin_index][0][0],distances[origin_index][0][1])]
+                    current_square = [(distances[ix][0][0],distances[ix][0][1])]
+                    local_dist = local_dist_finder(origin_square, current_square, graph_list)
+                                        
+                    new_dist = prev_dist + local_dist 
+                    if new_dist < distances[ix][1] :
+                         distances[ix].pop(1)
+                         distances[ix].append(new_dist)
+                    
                 # Si no, termina la ejecución, es decir, se encontró el punto final
                 else:
                     termino = True
