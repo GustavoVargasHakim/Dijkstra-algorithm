@@ -14,7 +14,7 @@ import math as math
 
 def distances_finder(point, vector) :
     for i in range(len(vector)) :
-        if vector[i][0] == point :
+        if point == vector[i][0] :
             break
         
     return i
@@ -577,7 +577,8 @@ while not done:
                 point = (ad_c[0], ad_c[1])
                 ix = distances_finder(point, distances)
                 if ad_c[2] < distances[ix][1] :
-                    distances[ix] = ad_c[2]
+                   distances[ix].pop(1)
+                   distances[ix].append(ad_c[2])
                 
 
     # Cuando nos ubicamos en init para ir a los nodos que no se han visitado (diagonales)
