@@ -9,7 +9,7 @@ Created on Fri Sep 13 13:43:28 2019
 import pygame
 import numpy as np
 import random
-import time as time
+import math
 
 '''Index finder'''
 def graph_list_finder(point) :
@@ -558,6 +558,15 @@ done = False
 current_square = graph_list[i_index][0]
 ix = i_index
 final_square = graph_list[e_index][0]
+
+for i in range(len(list(graph_list))) :
+    if list(graph_list[i][0]) != [] :
+        x_c = list(graph_list)[i][0][0][0]
+        y_c = list(graph_list)[i][0][0][1]
+        element = [[x_c,y_c], math.inf]
+        if not element in distances :
+            distances.append(element)
+
 while not done:
     # print(initial_square[0], initial_square[1])
     # print(graph_list[i_index][1]) # Recupera adyacentes de i_index point
@@ -593,11 +602,10 @@ while not done:
     if not final_square in visited :
 
         for square in graph_list[ix][1] :
+            
             distances.append(square)
         visited.append(current_square)
-        dist, ix = search_min_dist(graph_list[ix][1])
-        current_square
-        
+        dist, ix = search_min_dist(graph_list[ix][1])  
                     
                 
             
