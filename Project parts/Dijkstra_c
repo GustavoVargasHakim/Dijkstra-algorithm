@@ -578,6 +578,8 @@ while not done:
                 pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height])
                 visited.append([ad_c[0],ad_c[1]])
 
+    # Cuando nos ubicamos en los nodos ya visitados (1) desde init
+    # buscar y colorear los nodos no visitados desde ellos (1)
     elif tiempo > 1:
         # se reinicia el arreglo de no visitados
         not_visited = []
