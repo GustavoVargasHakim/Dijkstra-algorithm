@@ -10,6 +10,7 @@ import pygame
 import numpy as np
 import random
 import time as time
+import math as math
 
 '''Function to choose if one square is a corner, a wall or another'''
 def get_tipo_cuadrado (x, y) :
@@ -506,7 +507,7 @@ while not done:
         break
 
 '''Finding start and end point nodes in graph_list (indeces)'''
-graph_list = np.asarray(graph_list)
+#graph_list = np.asarray(graph_list)
 initial_point = [(initial_square[0], initial_square[1])]
 for i in range(len(graph_list)):
     if graph_list[i][0] == initial_point :
@@ -545,9 +546,14 @@ def is_in_arr(node, arr):
 
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
+distances = []
 visited = []
 tiempo = 0
 termino = False
+for i in range(len(graph_list)) :
+    if graph_list[i] != [[], []] :
+        distances.append([(graph_list[i][0][0][0], graph_list[i][0][0][1]), math.inf])
+        
 while not done:
     # Cuando nos ubicamos en init para ir a sus adyacentes con distancia más corta
     if tiempo == 0:
@@ -559,7 +565,7 @@ while not done:
         # Colorear nodos con distancia más corta
         for ad_c in graph_list[i_index][1]:
             if ad_c[2] == min_dist:
-                pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height])
+                pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height],3)
                 visited.append([ad_c[0],ad_c[1]])
 
     # Cuando nos ubicamos en init para ir a los nodos que no se han visitado (diagonales)
@@ -576,7 +582,7 @@ while not done:
 
         for ad_c in not_visited:
             if ad_c[2] == min_dist:
-                pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height])
+                pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height],3)
                 visited.append([ad_c[0],ad_c[1]])
 
     # Cuando nos ubicamos en los nodos ya visitados* desde init
@@ -608,7 +614,7 @@ while not done:
                 n_point = [(notv[0], notv[1])]
                 # Si no es el punto final, colorea el punto
                 if graph_list[e_index][0] != n_point:
-                    pygame.draw.rect(screen, BLUE, [(notv[0]-1)*8,(notv[1]-1)*8,width,height])
+                    pygame.draw.rect(screen, BLUE, [(notv[0]-1)*8,(notv[1]-1)*8,width,height], 3)
                     visited.append([notv[0],notv[1]])
                 # Si no, termina la ejecución, es decir, se encontró el punto final
                 else:
