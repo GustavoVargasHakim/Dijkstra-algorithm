@@ -561,6 +561,8 @@ for i in range(len(graph_list)) :
     if graph_list[i] != [[], []] :
         distances.append([(graph_list[i][0][0][0], graph_list[i][0][0][1]), math.inf])
         
+distances[0].pop(1)
+distances[0].append(0)
 while not done:
     # Cuando nos ubicamos en init para ir a sus adyacentes con distancia más corta
     if tiempo == 0:
@@ -597,6 +599,11 @@ while not done:
             if ad_c[2] == min_dist:
                 pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height],3)
                 visited.append([ad_c[0],ad_c[1]])
+                point = (ad_c[0], ad_c[1])
+                ix = distances_finder(point, distances)
+                if ad_c[2] < distances[ix][1] :
+                   distances[ix].pop(1)
+                   distances[ix].append(ad_c[2])
 
     # Cuando nos ubicamos en los nodos ya visitados* desde init
     # buscar y colorear los nodos no visitados desde ellos*
