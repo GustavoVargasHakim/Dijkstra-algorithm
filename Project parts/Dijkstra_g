@@ -631,8 +631,8 @@ while not done:
                     for n in adys:
                         if not is_in_arr(n, visited):
                             not_visited.append(n)
-                            #point = [(n[0], n[1])]
-                            indeces.append(graph_list_finder(point, graph_list))
+                            point = (node[0], node[1])
+                            indeces.append(distances_finder(point, distances))
 
                     break
         
