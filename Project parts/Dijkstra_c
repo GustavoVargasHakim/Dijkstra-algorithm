@@ -549,10 +549,6 @@ visited = []
 tiempo = 0
 termino = False
 while not done:
-    # print(initial_square[0], initial_square[1])
-    # print(graph_list[i_index][1]) # Recupera adyacentes de i_index point
-    # print(graph_list[i_index][1][0][2]) # Recupera distancia a punto [0] adyacente de i_index point
-    
     # Cuando nos ubicamos en init para ir a sus adyacentes con distancia más corta
     if tiempo == 0:
         visited.append([initial_square[0], initial_square[1]])
@@ -574,7 +570,6 @@ while not done:
             if not is_in_arr(ady, visited):
                 not_visited.append(ady)
 
-        #print(not_visited)
         min_dist = search_min_dist(not_visited)
         print("min:",min_dist)
 
@@ -584,10 +579,11 @@ while not done:
                 visited.append([ad_c[0],ad_c[1]])
 
     elif tiempo > 1:
-        #print(visited)
+        # se reinicia el arreglo de no visitados
         not_visited = []
-        # Si alguno de los visitados tiene nodos no visitados, visitar los no visitados con camino más corto
         adys = []
+
+        # Por cada
         for node in visited:
             point = [(node[0], node[1])]
             for i in range(len(graph_list)):
