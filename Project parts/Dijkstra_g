@@ -37,6 +37,14 @@ def local_dist_finder(opoint, cpoint, vector):
         
     return local
 
+def ways_finder(point, vector) :
+    for i in range(len(vector)):
+        index = len(vector[i]) - 1
+        if vector[i][index] == point[0] :
+            break
+    
+    return i
+        
 '''Function to choose if one square is a corner, a wall or another'''
 def get_tipo_cuadrado (x, y) :
     if x == 1 and y == 1:
@@ -571,6 +579,8 @@ def is_in_arr(node, arr):
 
 '''Game loop'''
 #Al the Dijkstra graphical simulation goes inside this while loop
+ways = []
+final_way = []
 distances = []
 visited = []
 tiempo = 0
@@ -594,6 +604,7 @@ while not done:
             if ad_c[2] == min_dist:
                 pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height],3)
                 visited.append([ad_c[0],ad_c[1]])
+                ways.append([(ad_c[0], ad_c[1])])
                 point = (ad_c[0], ad_c[1])
                 ix = distances_finder(point, distances)
                 if ad_c[2] < distances[ix][1] :
@@ -617,6 +628,7 @@ while not done:
             if ad_c[2] == min_dist:
                 pygame.draw.rect(screen, BLUE, [(ad_c[0]-1)*8,(ad_c[1]-1)*8,width,height],3)
                 visited.append([ad_c[0],ad_c[1]])
+                ways.append([(ad_c[0], ad_c[1])])
                 point = (ad_c[0], ad_c[1])
                 ix = distances_finder(point, distances)
                 if ad_c[2] < distances[ix][1] :
@@ -672,6 +684,8 @@ while not done:
                          distances[ix].pop(1)
                          distances[ix].append(new_dist)
                     
+                    #iz = ways_finder(origin_square, ways)
+                    #ways[iz].append(((distances[ix][0][0],distances[ix][0][1])))
                 # Si no, termina la ejecución, es decir, se encontró el punto final
                 else:
                     point = (notv[0], notv[1])
@@ -681,14 +695,43 @@ while not done:
                     prev_dist = distances[origin_index][1] #Distancia hasta el nodo origen
                     origin_square = [(distances[origin_index][0][0],distances[origin_index][0][1])]
                     current_square = [(distances[ix][0][0],distances[ix][0][1])]
+                    #iz = ways_finder(origin_square, ways)
+                    #ways[iz].append(((distances[ix][0][0],distances[ix][0][1])))
                     local_dist = local_dist_finder(origin_square, current_square, graph_list)
                     
                     new_dist = prev_dist + local_dist 
                     if new_dist < distances[ix][1] :
                          distances[ix].pop(1)
                          distances[ix].append(new_dist)
+                    
+                    now = graph_list[e_index][0]
+                    start = graph_list[i_index][0]
+                    while now != start :
+                        D = []
+                        now_index = graph_list_finder(now, graph_list)
+                        for squares in graph_list[now_index][1] :
+                            xn = squares[0]
+                            yn = squares[1]
+                            p = (xn, yn)
+                            d_index = distances_finder(p, distances)
+                            D.append(distances[d_index])
+                        
+                        minor = D[0]
+                        for d in D :
+                            if d[1] < minor[1] :
+                                minor = d
+                        
+                        point = (minor[0][0] , minor[0][1])
+                        new_i = graph_list_finder([point], graph_list)
+                        now = graph_list[new_i][0]
+                        pygame.draw.rect(screen, GREEN, [(point[0]-1)*8,(point[1]-1)*8,width,height])
+                        
+                        
+            
+                            
+                        
                     termino = True
-
+                
     if not termino:
         time.sleep(0.1)
         tiempo += 1
